@@ -7,7 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class EntityCardSmallComponent implements OnInit {
   @Input() class;
-  @Input() data: [];
+  @Input() data: any[];
   constructor() { }
 
   ngOnInit() {

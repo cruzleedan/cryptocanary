@@ -9,7 +9,7 @@ export class SideItemComponent implements OnInit {
   @Input() class;
   @Input() title;
   @Input() subtitle;
-  @Input() data: [];
+  @Input() data: any[];
   constructor() { }
 
   ngOnInit() {

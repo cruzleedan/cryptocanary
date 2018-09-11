@@ -49,6 +49,8 @@ import { PageLayoutComponent } from './page-layout/page-layout.component';
 import { SeparatorComponent } from './separator/separator.component';
 import { SideItemComponent } from './side-item/side-item.component';
 import { EntityCardSmallComponent } from './entity-card-small/entity-card-small.component';
+import { MsgDialogComponent } from './dialog/msg-dialog.component';
+import { AuthFormComponent } from './auth-form/auth-form.component';
 
 
 @NgModule({
@@ -98,7 +100,9 @@ import { EntityCardSmallComponent } from './entity-card-small/entity-card-small.
     PageLayoutComponent,
     SeparatorComponent,
     SideItemComponent,
-    EntityCardSmallComponent
+    EntityCardSmallComponent,
+    MsgDialogComponent,
+    AuthFormComponent
   ],
   exports: [
     CommonModule,
@@ -143,7 +147,9 @@ import { EntityCardSmallComponent } from './entity-card-small/entity-card-small.
     PageLayoutComponent,
     SeparatorComponent,
     SideItemComponent,
-    EntityCardSmallComponent
+    EntityCardSmallComponent,
+    MsgDialogComponent,
+    AuthFormComponent
   ],
   providers: [
     { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
