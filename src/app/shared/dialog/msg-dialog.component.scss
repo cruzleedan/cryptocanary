@@ -1,0 +1,24 @@
+:host {
+    display: block;
+    height: 100%;
+}
+mat-dialog-content {
+    overflow: scroll;
+    height: 100%;
+    position: relative;
+    display: block;
+    mat-expansion-panel {
+        word-wrap: break-word;
+    }
+}
+.title {
+    width: 100%;
+    text-align: center;
+    font-size: 1.3rem;
+}
+.more {
+    text-decoration: underline;
+    font-size:12px;
+    color: #434343;
+    cursor: pointer;
+}

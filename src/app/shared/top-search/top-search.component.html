@@ -1,0 +1,11 @@
+<form class="component--app-top-search ng-untouched ng-pristine ng-valid" novalidate="">
+  <mat-form-field appearance="legacy" floatLabel="never" hintLabel="">
+    <mat-icon matPrefix>search</mat-icon>
+    <input type="text" placeholder="Search" aria-label="Search" matInput [formControl]="searchCtrl" [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngFor="let option of options" [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</form>

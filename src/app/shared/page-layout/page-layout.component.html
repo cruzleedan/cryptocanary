@@ -1,0 +1,17 @@
+<div class="page-layout-header">
+  <mat-toolbar class="mat-elevation-z5" *ngIf="title">
+    <div fxFlex>
+      <div class="label">
+        <span>{{ title }}</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button mat-icon-button>
+        <mat-icon>filter</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar>
+</div>
+<div class="page-layout-body">
+  <ng-content></ng-content>
+</div>

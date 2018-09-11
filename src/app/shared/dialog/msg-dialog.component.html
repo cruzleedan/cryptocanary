@@ -1,0 +1,41 @@
+<ng-container *ngIf="!data.isAuth && data.type != 'confirm'">
+    <div class="top-action" fxLayout="row" fxLayoutAlign="end">
+        <button mat-icon-button [mat-dialog-close]="true">
+            <mat-icon aria-label="close">close</mat-icon>
+        </button>
+    </div>
+    <mat-dialog-content>
+        <div *ngIf="title" class="title">{{ title }}</div>
+        <p>{{ msg }}</p>
+        <ng-container *ngIf="details && details !== 'undefined'">
+            <div class="more" (click)="expPanel.open()">Details</div>
+            <mat-expansion-panel #expPanel>
+                <p>{{ details }}</p>
+                <span class="more" (click)="expPanel.close()">Less</span>
+            </mat-expansion-panel>
+        </ng-container>
+    </mat-dialog-content>
+</ng-container>
+
+<ng-container *ngIf="data.isAuth">
+    <div class="top-action" fxLayout="row" fxLayoutAlign="end">
+        <button mat-icon-button (click)="close()">
+            <mat-icon aria-label="close">close</mat-icon>
+        </button>
+    </div>
+    <mat-dialog-content>
+        <app-auth-form authType="login" (attemptAuth)="attemptAuth($event)"></app-auth-form>
+    </mat-dialog-content>
+</ng-container>
+
+<ng-container *ngIf="data.type == 'confirm'">
+    <mat-dialog-content>{{ data.msg }}</mat-dialog-content>
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="end">
+        <button class="mat-raised-button" (click)="onConfirm()">
+            {{ data.confirmBtnTxt || 'Yes' }}
+        </button>
+        <button class="mat-raised-button" (click)="close()">
+            {{ data.cancelBtnTxt || 'Cancel' }}
+        </button>
+    </mat-dialog-actions>
+</ng-container>

@@ -1,0 +1,14 @@
+<div fxLayout="row">
+  <button mat-button [matMenuTriggerFor]="productsMenu" >Products</button>
+  <mat-menu #productsMenu="matMenu" yPosition="below" [overlapTrigger]="false">
+    <button mat-menu-item>Settings</button>
+    <button mat-menu-item>Help</button>
+  </mat-menu>
+  <button mat-button [matMenuTriggerFor]="marketplaceMenu" >Marketplace</button>
+  <mat-menu #marketplaceMenu="matMenu" yPosition="below" [overlapTrigger]="false">
+    <button mat-menu-item>Settings</button>
+    <button mat-menu-item>Help</button>
+  </mat-menu>
+  <button mat-button>News</button>
+  <button mat-button>About</button>
+</div>

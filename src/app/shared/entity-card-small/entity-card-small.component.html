@@ -1,0 +1,20 @@
+<a class="item"
+  [routerLink]="['/']"
+  *ngFor="let item of data">
+  <mat-card [class]="class"
+    fxLayout="row wrap">
+    <div class="img-cont small"
+      fxFlex="1 1 5em">
+      <img src="assets/images/avatars/default.png"
+        alt="User">
+    </div>
+    <div class="item-details"
+      fxFlex>
+      <div><span class="name font-weight-bold">{{ item.name }}</span> <span class="rating">{{ item.rating }}</span></div>
+      <div class="font-size-small text-color-medium">
+        <span class="published-by">{{ item.User.name }}</span> | <span class="published-date">{{ item.createdAt }}</span>
+      </div>
+      <div class="desc font-size-small">Pariatur aliquip sint consectetur culpa minim labore reprehenderit...</div>
+    </div>
+  </mat-card>
+</a>

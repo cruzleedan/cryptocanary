@@ -1,0 +1,177 @@
+/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500");
+@import "./themes/custom-theme-1.scss";
+
+html,
+body {
+  height: 100%;
+  font-size: 14px;
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+.component--global-nav.mode-desktop .mat-button {
+  height: 60px;
+  margin-right: 5px;
+  padding: 0 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.text-transform-upper {
+  text-transform: uppercase;
+}
+
+.font-weight-bold {
+  font-weight: 500;
+}
+
+.color-danger {
+  color: red;
+}
+.margin-large-top {
+  margin-top: 16px;
+}
+
+.layout-wrap {
+  flex-wrap: wrap;
+}
+
+.layout-row {
+  flex-direction: row;
+}
+
+.section-layout.mat-card {
+  padding: 0;
+}
+
+.cardWrapper mat-card {
+  padding: 8px;
+}
+
+.mat-card-content>:first-child,
+.mat-card>:first-child {
+  margin-top: 0;
+}
+
+.border-color-divider {
+  border-color: rgba(0, 0, 0, .1);
+}
+
+.border-bottom {
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+}
+
+.padding-xlarge {
+  padding: 20px;
+}
+
+.padding-medium {
+  padding: 8px;
+}
+
+.margin-xlarge-bottom {
+  margin-bottom: 20px;
+}
+.margin-xlarge-top{
+  margin-top: 20px;
+}
+
+.flex-noshrink {
+  flex: 1 0 auto;
+  max-width: 100%;
+}
+
+.image-with-placeholder {
+  line-height: 0;
+  border: 1px solid rgba(0, 0, 0, .3);
+  border-radius: 2px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4CAIAAAC2BqGFAAAAGXRFW…iaoGkETdAETSNogqYRNEETNI2gCZpG0ARN0DS77R8BBgDV2385oXHdmgAAAABJRU5ErkJggg==);
+}
+
+.text-color-medium {
+  color: rgba(0, 0, 0, .5);
+}
+
+.font-size-small {
+  font-size: 12px;
+}
+
+.font-size-medium {
+  font-size: 16px;
+}
+
+.font-size-large {
+  font-size: 20px;
+}
+
+.font-size-xlarge {
+  font-size: 24px;
+}
+
+.font-weight-light {
+  font-weight: 300;
+}
+
+.align-center {
+  text-align: center;
+}
+
+.link {
+  color: #0288d1;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.display-block {
+  display: block;
+}
+
+.margin-medium-top {
+  margin-top: 8px;
+}
+
+.theme {
+  background-color: #fff;
+  border-top-left-radius: 2px;
+  height: 46px;
+  width: 46px;
+  text-align: center;
+
+  mat-icon {
+    line-height: 46px;
+  }
+}
+
+.absolute-to-cover {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.accent-top::before {
+  content: "";
+  height: 5px;
+  background: linear-gradient(to right, #b28948, #f5dd9e, #b28948);
+  border-radius: 2px 2px 0 0;
+  display: block;
+  width: 100%;
+}
+.overflow-hidden {
+  overflow: hidden;
+}

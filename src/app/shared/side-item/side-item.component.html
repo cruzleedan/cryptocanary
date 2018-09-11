@@ -1,0 +1,9 @@
+<div class="header">
+  <div class="title font-weight-bold font-size-medium" [class.color-danger]="class==='danger'">{{ title }}</div>
+  <div class="label font-size-small text-color-medium">{{ subtitle }}</div>
+</div>
+<div class="body"
+  fxLayout="column"
+  fxLayoutGap="10px">
+  <app-entity-card-small [class]="class" [data]="data"></app-entity-card-small>
+</div>

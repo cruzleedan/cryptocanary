@@ -1,0 +1,11 @@
+<app-page-layout>
+  <section class="home" fxLayout="row wrap" fxLayout.lt-md="column wrap" fxLayoutGap="20px">
+    <div fxFlex="2 2 calc(20em + 20px)" fxFlex.lt-md="100%">
+      something here
+    </div>
+    <div fxFlex fxLayout="column" fxFlex.lt-md="100%">
+      <app-side-item title="Scam Projects" subtitle="Rate these projects" class="danger" [data]="scamProjects"></app-side-item>
+      <app-side-item title="Recent Projects" subtitle="Rate these projects" class="success" [data]="recentProjects"></app-side-item>
+    </div>
+  </section>
+</app-page-layout>
