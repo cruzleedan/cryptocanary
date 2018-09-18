@@ -15,5 +15,6 @@ export interface User {
     gender: string;
     desc: string;
     reviewsCount?: number;
+    reviewCount?: number;
     entitiesCount?: number;
 }

@@ -1,0 +1,33 @@
+<mat-toolbar fxLayout="row"
+  fxLayout.lt-md="column"
+  [ngClass.lt-md]="'full-height'">
+  <div [ngClass.lt-md]="'full-width'">
+    <button mat-icon-button
+      (click)="sidenav.toggle()"
+      fxHide.gt-sm="true"
+      fxFlexAlign="start"
+      class="menu-button">
+      <i class="material-icons app-toolbar-menu">menu </i>
+    </button>
+    <a [routerLink]="['/home']"
+      class="a-container"><span [ngClass.lt-md]="'abs-logo'">cryptocanary</span></a>
+  </div>
+  <app-top-search fxFlex
+    fxHide.lt-md="true">
+  </app-top-search>
+  <app-global-nav></app-global-nav>
+  <app-user-menu fxHide.lt-md="true"
+    *ngIf="isAuthenticated"
+    [currentUser]="toolbarHelpers?.currentUser">
+  </app-user-menu>
+  <app-session-controls fxHide.lt-md="true"
+    *ngIf="!isAuthenticated">
+  </app-session-controls>
+</mat-toolbar>
+
+<mat-toolbar fxShow.lt-md="true"
+  fxHide.gt-sm="true"
+  fxLayout="row"
+  fxLayoutAlign="center center">
+  <app-top-search fxFlex></app-top-search>
+</mat-toolbar>

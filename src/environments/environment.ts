@@ -12,7 +12,7 @@ export const environment = {
       validateToken: 'api/auth/validatetoken'
   },
   fbConfig: {
-      appId: '186964375335970',
+      appId: '2252702861425537',
       status: false,  // the SDK will attempt to get info about the current user immediately after init
       cookie: false,  // enable cookies to allow the server to access
       // the session

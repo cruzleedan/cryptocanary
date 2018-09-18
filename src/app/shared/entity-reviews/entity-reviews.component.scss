@@ -1,0 +1,18 @@
+section .review-item {
+  margin-bottom: 10px;
+}
+img.icon {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 50px;
+}
+.more-cont {
+  span {
+    color: blue;
+    margin-left: 5px;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

@@ -1,0 +1,33 @@
+<mat-progress-bar></mat-progress-bar>
+<section *ngIf="entities">
+  <mat-card *ngFor="let entity of entities"
+    fxLayout="row">
+    <div class="entity-logo-container"
+      fxFlex="1 1 5em">
+      <img src="assets/images/entities/default.png"
+        alt="logo">
+    </div>
+    <div class="entity-item"
+      fxFlex>
+      <div class="entity-item-header">
+        <span class="entity-item-name">{{ entity.name }}</span>
+        <span class="entity-item-symbol">(ETH)</span>
+        <span class="entity-item-rating">{{ entity.rating }}</span>
+      </div>
+      <div class="entity-desc">{{ entity.desc }}</div>
+      <div class="entity-footer"
+        fxLayout="row wrap">
+        <ng-container *ngIf="entity.links && entity.links.length">
+          <a mat-button
+            *ngFor="let link of entity.links"
+            [href]="link.link"
+            target="blank">
+            <mat-icon>language</mat-icon>
+            {{ link.name }}
+          </a>
+        </ng-container>
+        <app-social-share-button></app-social-share-button>
+      </div>
+    </div>
+  </mat-card>
+</section>

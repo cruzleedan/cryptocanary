@@ -1,11 +1,27 @@
 <app-page-layout>
-  <section class="home" fxLayout="row wrap" fxLayout.lt-md="column wrap" fxLayoutGap="20px">
-    <div fxFlex="2 2 calc(20em + 20px)" fxFlex.lt-md="100%">
-      something here
-    </div>
-    <div fxFlex fxLayout="column" fxFlex.lt-md="100%">
-      <app-side-item title="Scam Projects" subtitle="Rate these projects" class="danger" [data]="scamProjects"></app-side-item>
-      <app-side-item title="Recent Projects" subtitle="Rate these projects" class="success" [data]="recentProjects"></app-side-item>
-    </div>
+  <section class="home"
+    fxLayout="row"
+    fxLayoutAlign="center">
+    <mat-tab-group fxFlex="0 0 70%"
+      mat-stretch-tabs
+      (selectedTabChange)="selectedTabChange($event)">
+      <mat-tab label="NEW PROJECTS">
+        <section>
+          <app-entity-card-overview [data]="entities"
+            fxLayout="column"
+            fxLayoutGap="10px">
+          </app-entity-card-overview>
+        </section>
+      </mat-tab>
+      <mat-tab label="SHADIEST PROJECTS">
+        <section fxLayout="column"
+          fxLayoutGap="10px">
+          <app-entity-card-overview [data]="entities"
+            fxLayout="column"
+            fxLayoutGap="10px">
+          </app-entity-card-overview>
+        </section>
+      </mat-tab>
+    </mat-tab-group>
   </section>
 </app-page-layout>

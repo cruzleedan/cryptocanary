@@ -1,4 +1,5 @@
 import { Entity } from './entity.model';
+import { User } from './user.model';
 
 export interface Review {
     id: string;
@@ -16,4 +17,5 @@ export interface Review {
     createdAt: string;
     updatedAt: string;
     Entity?: Entity;
+    User?: User;
 }

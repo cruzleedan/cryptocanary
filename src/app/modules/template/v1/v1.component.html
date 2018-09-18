@@ -1,25 +1,12 @@
-<header>
-  <mat-toolbar fxLayout="row" fxLayout.lt-md="column" color="primary">
-    <div [ngClass.lt-md]="'full-width'">
-      <button mat-icon-button (click)="sidenav.toggle()" fxHide.gt-sm="true" fxFlexAlign="start" class="menu-button">
-        <i class="material-icons app-toolbar-menu">menu </i>
-      </button>
-      <span [ngClass.lt-md]="'abs-logo'">cryptocanary</span>
-    </div>
-    <app-global-nav></app-global-nav>
-    <app-top-search fxFlex fxHide.lt-md="true"></app-top-search>
-    <app-session-controls fxHide.lt-md="true"></app-session-controls>
-  </mat-toolbar>
-  <mat-toolbar fxShow.lt-md="true" fxHide.gt-sm="true" fxLayout="row" fxLayoutAlign="center center" color="primary">
-    <app-top-search fxFlex></app-top-search>
-  </mat-toolbar>
+<header class="mat-elevation-z4">
+  <app-main-toolbar [sidenav]="sidenav"></app-main-toolbar>
 </header>
 
 <mat-sidenav-container>
   <mat-sidenav mode="over" #sidenav>
     <app-side-nav></app-side-nav>
   </mat-sidenav>
-  <mat-sidenav-content>
+  <mat-sidenav-content class="white-bg">
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

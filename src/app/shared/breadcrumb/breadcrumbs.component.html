@@ -1,0 +1,6 @@
+<app-page-layout>
+    <span *ngFor="let b of breadcrumbs; let last = last">
+        <a [routerLink]="b.href">{{ b.label }}</a>
+        <span *ngIf="!last" class="separator">/</span>
+    </span>
+</app-page-layout>

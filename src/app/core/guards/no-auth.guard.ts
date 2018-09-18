@@ -15,10 +15,10 @@ export class NoAuthGuard implements CanActivate {
     ) { }
 
     canActivate(
-        next: ActivatedRouteSnapshot,
+        route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
         console.log('no auth guard', this.userService.isAuthenticated);
 
-        return this.userService.isUserNotAuthenticated();
+        return this.userService.isUserNotAuthenticated(route, state);
     }
 }

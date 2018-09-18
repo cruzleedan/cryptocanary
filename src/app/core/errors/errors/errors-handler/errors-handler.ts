@@ -2,7 +2,7 @@
 import { ErrorHandler, Injectable, Injector } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { of, throwError, Observable } from 'rxjs';
 
 import { ErrorsService } from '../errors-service/errors.service';
 import { NotificationService } from '../../services/notification/notification.service';
@@ -82,7 +82,10 @@ export class ErrorsHandler implements ErrorHandler {
             console.log('prop desc ', Object.getOwnPropertyDescriptors(error));
         }
         // return an observable with a user-facing error message
-        return of(error);
+        // return of(error);
+        console.log('will throw an error message');
+
+        return throwError('thrown error message');
 
     }
 }

@@ -1,0 +1,42 @@
+<section>
+  <div class="review-item"
+    fxLayout="row wrap"
+    fxLayoutGap="10px"
+    *ngFor="let review of entityReviews">
+    <div class="avatar-cont"
+      fxFlex="1 1 3em">
+      <img [src]="baseUrl+'/avatar/'+review.User.id+'/'+review.User.avatar"
+        onerror="this.onerror=null;this.src='/assets/images/avatars/default.png'"
+        alt="user"
+        class="icon">
+    </div>
+    <div class="content"
+      fxFlex>
+      <div class="header">
+        <span class="name">{{ review.User.username || review.User.email }}</span> says <span class="rating rating-{{ review.rating | ratingLabel | replaceSpaces }}">{{
+          review.rating | ratingLabel }}</span>
+      </div>
+      <div class="desc">
+        {{ review.review }}
+      </div>
+      <div class="footer"
+        fxLayout="row"
+        fxLayoutGap="20px">
+        <button class="green-text"
+          (click)="voteReview(review.id, true)"
+          mat-button>
+          {{ review.upvoteTally }} <mat-icon>arrow_upward</mat-icon> Helpful
+        </button>
+        <button class="grey-text"
+          (click)="voteReview(review.id, false)"
+          mat-button>
+          {{ review.downvoteTally }} <mat-icon>arrow_downward</mat-icon> Suspicious
+        </button>
+      </div>
+    </div>
+  </div>
+  <div fxLayout="row"
+    fxLayoutAlign="end"
+    class="more-cont">{{ entityReviews.length }} of {{ entityTotalReviews }} <span (click)="loadReviews()"> More
+      reviews</span></div>
+</section>

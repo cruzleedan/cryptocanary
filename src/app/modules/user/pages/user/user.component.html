@@ -1,0 +1,30 @@
+<app-breadcrumbs></app-breadcrumbs>
+<app-page-layout>
+  <section fxLayout="row wrap" fxLayoutGap="50px">
+    <div fxFlex="15%"
+      fxLayout="column">
+      <div class="avatar-cont">
+        <img src="assets/images/avatars/default.png"
+          alt="avatar">
+      </div>
+      <div>Username</div>
+      <div>example@email.com</div>
+      <mat-nav-list class="slim">
+        <mat-list-item>
+          <a [routerLink]="['/user/reviews-projects']">
+            <mat-icon>message</mat-icon>
+            Reviews & Projects
+          </a>
+        </mat-list-item>
+      </mat-nav-list>
+    </div>
+    <mat-tab-group fxFlex>
+      <mat-tab label="Reviews">
+        <app-review-cards></app-review-cards>
+      </mat-tab>
+      <mat-tab label="Projects">
+        <app-entity-cards></app-entity-cards>
+      </mat-tab>
+    </mat-tab-group>
+  </section>
+</app-page-layout>

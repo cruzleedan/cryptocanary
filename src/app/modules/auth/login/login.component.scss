@@ -1,0 +1,33 @@
+.main-cont {
+  max-width: 300px;
+}
+.margin-top {
+  margin-top: 25px;
+}
+
+.cover {
+  width: 100vw;
+  height: 100vh;
+  font-size: 16px;
+}
+.logo-container {
+  text-align: center;
+  .sub-title {
+    font-size: 3rem;
+    span {
+      &:first-child {
+        color: #f58704;
+      }
+      &:last-child {
+        color: #4b2f18;
+      }
+    }
+  }
+}
+.sign-up-side-cont {
+  background-color: #f58704;
+  color: #f7a143;
+  .page-title {
+    font-size: 7rem;
+  }
+}

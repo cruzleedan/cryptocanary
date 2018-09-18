@@ -1,0 +1,61 @@
+<div class="top-action"
+  fxLayout="row">
+  <div class="title"
+    fxFlex
+    fxFlexAlign="center"
+    class="align-center">Add A Review</div>
+  <button mat-icon-button
+    fxFlexAlign="end"
+    [mat-dialog-close]="true">
+    <mat-icon aria-label="close">close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <form>
+    <div class="field"
+      fxLayout="column">
+      <span class="label">Add your rating</span>
+      <label>Add your rating according to your experience</label>
+      <mat-radio-group fxLayout="row"
+        fxLayoutGap="10px">
+        <div fxLayout="column"
+          fxLayoutGap="5px">
+          <mat-radio-button color="primary"
+            value="1">
+            Not Shady At All
+          </mat-radio-button>
+          <mat-radio-button color="primary"
+            value="2">
+            Slightly Shady
+          </mat-radio-button>
+          <mat-radio-button color="primary"
+            value="3">
+            Shady
+          </mat-radio-button>
+        </div>
+        <div fxLayout="column"
+          fxLayoutGap="5px">
+          <mat-radio-button color="primary"
+            value="4">
+            Very Shady
+          </mat-radio-button>
+          <mat-radio-button color="primary"
+            value="5">
+            Super Shady
+          </mat-radio-button>
+        </div>
+      </mat-radio-group>
+    </div>
+    <div class="field" fxLayout="column">
+      <span class="label">Add your review</span>
+      <mat-form-field fxFlex appearance="outline">
+        <textarea matInput
+          rows="10"
+          placeholder="Write your review here..."></textarea>
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end" class="action-cont">
+      <button mat-raised-button color="primary">Submit</button>
+    </div>
+  </form>
+</mat-dialog-content>

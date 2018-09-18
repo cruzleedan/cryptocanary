@@ -1,0 +1,39 @@
+<button mat-button
+  [matMenuTriggerFor]="shareMenu">
+  <mat-icon>share</mat-icon> Share
+</button>
+<mat-menu #shareMenu="matMenu"
+  class="share-menu">
+  <div mat-menu-item>
+    <share-button [theme]="'modern-dark'"
+      [button]="'facebook'"
+      [showCount]="true"
+      [url]="currentUrl"
+      [autoSetMeta]="false">
+    </share-button>
+  </div>
+  <div mat-menu-item>
+    <share-button [theme]="'modern-dark'"
+      [button]="'twitter'"
+      [showCount]="true"
+      [url]="currentUrl"
+      [autoSetMeta]="false">
+    </share-button>
+  </div>
+  <div mat-menu-item>
+    <share-button [theme]="'modern-dark'"
+      [button]="'pinterest'"
+      [showCount]="true"
+      [url]="currentUrl"
+      [autoSetMeta]="false">
+    </share-button>
+  </div>
+  <div mat-menu-item>
+    <share-button [theme]="'modern-dark'"
+      [button]="'linkedin'"
+      [showCount]="true"
+      [url]="currentUrl"
+      [autoSetMeta]="false">
+    </share-button>
+  </div>
+</mat-menu>

@@ -7,6 +7,10 @@ mat-sidenav-container {
     width: 210px;
   }
 }
+header {
+  position: relative;
+  z-index: 1000;
+}
 .abs-logo {
   flex: 1;
   text-align: center;

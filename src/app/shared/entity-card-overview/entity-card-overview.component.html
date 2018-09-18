@@ -1,0 +1,27 @@
+<a [routerLink]="['/entity/' + entity.id]"
+  *ngFor="let entity of data">
+  <mat-card fxLayout="row"
+    fxLayoutGap="5px"
+    fxLayoutAlign="stretch center"
+    class="entity-item">
+    <div class="icon-cont">
+      <img [src]="baseUrl+'/entity/'+entity.id+'/'+entity.image"
+        onerror="this.onerror=null;this.src='assets/images/entities/default.png';"
+        alt="icon"
+        class="icon">
+    </div>
+    <div class="name"
+      fxFlex>
+      <div>
+        <span>{{ entity.name }}</span>
+      </div>
+      <div>
+        <span>
+          <mat-icon fontSet="fa"
+            fontIcon="fa-calendar"></mat-icon>
+        </span> <span>{{ entity.createdAt | dateTimeMomentFormat:'YYYY-MM-DD HH:mm:ss'}}</span>
+      </div>
+    </div>
+    <div class="rating">{{ entity.rating }} Shady</div>
+  </mat-card>
+</a>

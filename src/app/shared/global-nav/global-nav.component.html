@@ -1,5 +1,5 @@
-<div fxLayout="row">
-  <button mat-button [matMenuTriggerFor]="productsMenu" >Products</button>
+<div fxLayout="row" fxLayoutAlign="stretch center">
+  <!-- <button mat-button [matMenuTriggerFor]="productsMenu" >Products</button>
   <mat-menu #productsMenu="matMenu" yPosition="below" [overlapTrigger]="false">
     <button mat-menu-item>Settings</button>
     <button mat-menu-item>Help</button>
@@ -10,5 +10,8 @@
     <button mat-menu-item>Help</button>
   </mat-menu>
   <button mat-button>News</button>
-  <button mat-button>About</button>
+  <button mat-button>About</button> -->
+  <a mat-icon-button color="primary" [routerLink]="['/home']" >
+    <mat-icon>home</mat-icon>
+  </a>
 </div>

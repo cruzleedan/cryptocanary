@@ -1,0 +1,57 @@
+<app-breadcrumbs></app-breadcrumbs>
+<app-page-layout>
+  <section fxLayout="row wrap"
+    fxLayoutGap="20px">
+    <div class="icon-cont"
+      fxFlex="1 1 12em">
+      <img [src]="baseUrl+'/entity/'+entity.id+'/'+entity.image"
+        onerror="this.onerror=null;this.src='assets/images/entities/default.png';"
+        alt="icon"
+        class="icon">
+    </div>
+    <div class="content"
+      fxFlex
+      fxLayout="column"
+      fxLayoutGap="10px">
+      <div class="entity-header"
+        fxLayout="row"
+        fxLayoutGap="10px"
+        fxLayoutAlign="stretch baseline">
+        <span class="name">{{ entity.name }}</span>
+        <span class="rating rating-{{entity.rating | ratingLabel | replaceSpaces}}">
+          <span class="rating-pct">{{ entity | ratingPercent }}</span>
+          <span class="rating-label">{{ entity.rating | ratingLabel }}</span>
+        </span>
+        <span fxFlex></span>
+        <span>{{ entity.createdAt | date}}</span>
+      </div>
+      <div class="published-by">Added by: {{ entity.User.username }}</div>
+      <div class="write-review-cont">
+        <button mat-raised-button
+          (click)="openAddReviewDialog()"
+          color="primary">ADD A REVIEW</button>
+      </div>
+      <div class="desc"
+        [innerHtml]="entityDesc"></div>
+      <div class="entity-footer"
+        fxLayout="row"
+        fxLayoutGap="10px">
+        <button mat-button>
+          <mat-icon>message</mat-icon>
+          Add A Review
+        </button>
+        <ng-container *ngFor="let link of entity.links">
+          <button mat-button>
+            <mat-icon>language</mat-icon>
+            <a href="{{link.link}}"
+              target="blank">{{ link.name }}</a>
+          </button>
+        </ng-container>
+        <app-social-share-button></app-social-share-button>
+      </div>
+      <section class="review-cont">
+        <app-entity-reviews [entityId$]="entityId$"></app-entity-reviews>
+      </section>
+    </div>
+  </section>
+</app-page-layout>

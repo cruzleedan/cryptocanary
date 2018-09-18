@@ -20,14 +20,14 @@ const routes: Routes = [
       //   path: 'category',
       //   loadChildren: '../category/category.module#CategoryModule'
       // },
-      // {
-      //   path: 'entity',
-      //   loadChildren: '../entity/entity.module#EntityModule'
-      // },
-      // {
-      //   path: 'user',
-      //   loadChildren: '../user/user.module#UserModule',
-      // }
+      {
+        path: 'entity',
+        loadChildren: '../entity/entity.module#EntityModule'
+      },
+      {
+        path: 'user',
+        loadChildren: '../user/user.module#UserModule',
+      }
     ]
   }
 ];
