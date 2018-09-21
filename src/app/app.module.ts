@@ -31,9 +31,8 @@ import {
 import { ErrorsModule } from './core/errors/errors';
 import { NotificationService } from './core/errors/services/notification/notification.service';
 import { SharedModule } from './shared/shared.module';
-import { CoreModule } from '@angular/flex-layout';
 import { HttpService } from './core/errors/services/http/http.service';
-import { HttpTokenInterceptor } from './core';
+import { HttpTokenInterceptor, CoreModule } from './core';
 
 const config = new AuthServiceConfig([
   {

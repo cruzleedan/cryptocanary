@@ -80,7 +80,7 @@ export class EntityComponent implements OnInit, OnDestroy {
     this.entityDesc = this.domSanitizer.bypassSecurityTrustHtml(this.entity.desc || '');
     this.entity.links = this.entity.links instanceof Array ? this.entity.links : [];
   }
-  openAddReviewDialog(entityId: string): void {
+  openAddReviewDialog(): void {
     const dialogRef = this.dialog.open(AddReviewDialogComponent, {
       width: '600px',
       data: {
