@@ -7,13 +7,13 @@
     <span fxLayout="row"
       fxLayoutAlign="start center">
       <!-- <img class="avatar" [src]="currentUser?.photoURL || 'assets/images/avatars/noavatar.png'"> -->
+      <span class="name"
+        fxHide
+        fxShow.gt-xs>{{currentUser?.currentUserName || Hari}}</span>
       <img class="avatar"
         [src]="currentUser?.photoURL"
         alt="Avatar"
         onerror="this.onerror=null;this.src='/assets/images/avatars/default.png'">
-      <span class="name"
-        fxHide
-        fxShow.gt-xs>{{currentUser?.currentUserName || Hari}}</span>
       <mat-icon class="icon"
         fxHide
         fxShow.gt-xs>keyboard_arrow_down</mat-icon>

@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { Entity } from '../../core/models/entity.model';
 import { takeUntil } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-top-search',
@@ -13,6 +14,7 @@ import { MatAutocompleteSelectedEvent } from '@angular/material';
   styleUrls: ['./top-search.component.scss']
 })
 export class TopSearchComponent implements OnInit, OnDestroy {
+  baseUrl = environment.baseUrl;
   searchCtrl = new FormControl();
   options = [];
   filteredOptions: Entity[] = [];
@@ -59,8 +61,8 @@ export class TopSearchComponent implements OnInit, OnDestroy {
   }
   findKeyword() {
     console.log('find keyword');
-    // this.router.navigate(['/category'], {
-    //   queryParams: { 'find': this.searchCtrl.value }
-    // });
+    this.router.navigate(['/home/search'], {
+      queryParams: { 'find': this.searchCtrl.value }
+    });
   }
 }

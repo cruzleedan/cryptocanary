@@ -1,0 +1,41 @@
+<ng-container *ngIf="userActivities && dates">
+  <div class="activity"
+    *ngFor="let date of dates">
+    <div class="date">{{ date.moment }}</div>
+    <div class="task"
+      *ngFor="let task of userActivities[date.date]">
+      <div class="task-header"
+        fxLayout="row"
+        fxLayoutAlign="stretch center"
+        fxLayoutGap="10px">
+        <mat-icon *ngIf="task['activityType'] === 'review'">forum</mat-icon>
+        <mat-icon *ngIf="task['activityType'] === 'entity'">add</mat-icon>
+        <div class="task-header-content">
+          <span class="task-title">You {{ task['activityType'] === 'review' ? 'reviewed '+task['Entity']['name'] : 'added '+ task['name'] }} </span>
+          <span *ngIf="task['activityType'] === 'review'" class="rating rating-{{ task['rating'] | ratingLabel | replaceSpaces}}">
+            {{ task['rating'] | ratingLabel }}
+          </span>
+        </div>
+        <span fxFlex></span>
+        <button mat-icon-button
+          [matMenuTriggerFor]="activityMenu"
+          [matMenuTriggerData]="{task: task}">
+          <mat-icon>more_horiz</mat-icon>
+        </button>
+      </div>
+      <div class="task-desc"
+        [innerHTML]="task['activityType'] === 'review' ? task['review'] : task['desc']">
+      </div>
+    </div>
+  </div>
+</ng-container>
+<mat-menu #activityMenu="matMenu">
+  <ng-template matMenuContent let-task="task">
+    <button mat-menu-item (click)="editTask(task)">
+      Edit
+    </button>
+    <button mat-menu-item>
+      Delete
+    </button>
+  </ng-template>
+</mat-menu>

@@ -1,10 +1,11 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { EntityService, ReviewService } from '../../core';
+import { EntityService, ReviewService, UserService } from '../../core';
 import { Review } from '../../core/models/review.model';
 import { AuthService } from '../../core/services/auth.service';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-entity-reviews',
@@ -14,6 +15,8 @@ import { takeUntil } from 'rxjs/operators';
 export class EntityReviewsComponent implements OnInit, OnDestroy {
   baseUrl = environment.baseUrl;
   @Input() entityId$;
+  @Output() editUserReview: EventEmitter<Review> = new EventEmitter();
+  userReview: Review[];
   entityId: string;
   sortDirection: string;
   sortField: string;
@@ -26,7 +29,8 @@ export class EntityReviewsComponent implements OnInit, OnDestroy {
   constructor(
     private entityService: EntityService,
     private authService: AuthService,
-    private reviewService: ReviewService
+    private reviewService: ReviewService,
+    private userService: UserService
   ) {
     this.sortField = 'createdAt';
     this.sortDirection = 'desc';
@@ -36,6 +40,11 @@ export class EntityReviewsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.userService.currentUser$.subscribe(user => {
+      this.userReview = user['foundReviews'] || [];
+      console.log('entity reviews', user);
+    });
+
     this.entityId$
       .subscribe(entityId => {
         this.entityId = entityId;
@@ -91,5 +100,7 @@ export class EntityReviewsComponent implements OnInit, OnDestroy {
         }
       });
   }
-
+  editReview(review: Review) {
+    this.editUserReview.emit(review);
+  }
 }

@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>Success!</h2>
+<mat-dialog-content>
+    {{msg}}
+    <a mat-button [routerLink]="['/entity/'+id]" (click)="closeDialog()">Visit entity</a>
+</mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="end">
+    <button mat-button (click)="closeDialog()">Ok</button>
+</mat-dialog-actions>

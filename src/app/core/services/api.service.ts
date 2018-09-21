@@ -8,6 +8,7 @@ import { catchError, map, tap, last, finalize } from 'rxjs/operators';
 import { Entity } from '../models/entity.model';
 import { AlertifyService } from './alertify.service';
 import { AuthService } from './auth.service';
+import { GlobalService } from './global.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ import { AuthService } from './auth.service';
 export class ApiService {
   constructor(
     private http: HttpClient,
+    private globalService: GlobalService,
     private jwtService: JwtService,
     private alertifyService: AlertifyService
   ) { }
@@ -60,6 +62,9 @@ export class ApiService {
     }
   }
   putWithProg(path: string, body, includeError?: boolean) {
+    if (path === '/entities/new') {
+      this.globalService.setLoadingRequests('addNewEntity', true);
+    }
     const progress = new Subject<number>();
     const data = new Subject<Object>();
     const req = new HttpRequest('PUT', `${environment.baseApiUrl}${path}`, body, {
@@ -107,6 +112,9 @@ export class ApiService {
             data.next({});
             data.complete();
             return of({});
+          }),
+          finalize(() => {
+            this.globalService.setLoadingRequests('addNewEntity', false);
           })
         )
         .subscribe(subscribeFn);

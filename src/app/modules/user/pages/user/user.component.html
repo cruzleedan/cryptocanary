@@ -1,30 +1,114 @@
-<app-breadcrumbs></app-breadcrumbs>
-<app-page-layout>
-  <section fxLayout="row wrap" fxLayoutGap="50px">
-    <div fxFlex="15%"
+<app-breadcrumbs [size]="'wide'"
+  [currentPage]="currentPage"></app-breadcrumbs>
+<app-page-layout [size]="'wide'">
+  <section fxLayout="row wrap"
+    fxLayoutGap="50px">
+    <div class="side-content"
       fxLayout="column">
       <div class="avatar-cont">
-        <img src="assets/images/avatars/default.png"
+        <mat-progress-bar *ngIf="uploading"
+          mode="determinate"
+          [value]="uploadProgress | async"
+          color="primary">
+        </mat-progress-bar>
+        <div fxLayout="row"
+          fxLayoutAlign="stretch"
+          fxLayoutGap="5px">
+          <button type="button"
+            mat-icon-button
+            (click)="entityImgFile.click()">
+            <mat-icon>camera_alt</mat-icon>
+          </button>
+          <div *ngIf="croppedImage"
+            fxFlex
+            fxLayout="row"
+            fxLayoutAlign="end">
+            <button type="button"
+              mat-icon-button
+              (click)="updateAvatar()">
+              <mat-icon>save</mat-icon>
+            </button>
+            <button type="button"
+              (click)="cancelAvatarUpdate()"
+              mat-icon-button>
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+        <img [src]="croppedImage || userAvatarUrl"
+          *ngIf="croppedImage || userAvatarUrl"
+          onerror="this.onerror=null;this.src='assets/images/avatars/default.png'"
           alt="avatar">
+        <input type="file"
+          accept="image/*"
+          (change)="fileChangeEvent($event)"
+          #entityImgFile
+          style="display: none">
       </div>
-      <div>Username</div>
-      <div>example@email.com</div>
+      <div class="user-details">
+        <div class="username break-all"
+          fxLayout="row"
+          fxLayoutAlign="stretch center">
+          <ng-container *ngIf="editUsername">
+            <form [formGroup]="usernameForm">
+              <mat-form-field appearance="outline">
+                <input matInput
+                  placeholder="Username"
+                  formControlName="username">
+                <div matSuffix
+                  fxLayout="row"
+                  fxLayoutGap="5px">
+                  <button mat-icon-button
+                    (click)="saveUsername()">
+                    <mat-icon>save</mat-icon>
+                  </button>
+                  <button mat-icon-button
+                    type="button"
+                    (click)="cancelUsernameEdit()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+                <mat-hint>
+                  <mat-error>
+                    <span *ngIf="usernameForm.get('username').hasError('required')">Required</span>
+                    <span *ngIf="usernameForm.get('username').hasError('minLength')">Minimum Length is 3</span>
+                  </mat-error>
+                </mat-hint>
+              </mat-form-field>
+            </form>
+          </ng-container>
+          <ng-container *ngIf="!editUsername">
+            <span>{{ user.username }}</span>
+            <button mat-icon-button
+              (click)="editUsername = !editUsername">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </ng-container>
+        </div>
+        <div class="email break-all">{{ user.email }}</div>
+      </div>
       <mat-nav-list class="slim">
-        <mat-list-item>
-          <a [routerLink]="['/user/reviews-projects']">
-            <mat-icon>message</mat-icon>
-            Reviews & Projects
-          </a>
+        <mat-list-item [routerLink]="['/user/activity']"
+          routerLinkActive="active">
+          <mat-icon>forum</mat-icon>
+          Activity
+        </mat-list-item>
+        <mat-list-item (click)="logout()">
+          <mat-icon>donut_large</mat-icon>
+          Logout
         </mat-list-item>
       </mat-nav-list>
     </div>
     <mat-tab-group fxFlex>
-      <mat-tab label="Reviews">
+      <mat-tab label="ACTIVITY">
+        <app-user-activities></app-user-activities>
+      </mat-tab>
+      <!-- <mat-tab label="Reviews">
         <app-review-cards></app-review-cards>
       </mat-tab>
       <mat-tab label="Projects">
         <app-entity-cards></app-entity-cards>
-      </mat-tab>
+      </mat-tab> -->
     </mat-tab-group>
   </section>
 </app-page-layout>

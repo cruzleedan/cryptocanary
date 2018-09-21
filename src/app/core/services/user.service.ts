@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ErrorHandler } from '@angular/core';
 import { BehaviorSubject, of, ReplaySubject, Observable, Subject } from 'rxjs';
 import { User } from '../models/user.model';
 import { distinctUntilChanged, map, catchError, reduce, debounceTime, switchMap, mergeMap, finalize } from 'rxjs/operators';
@@ -6,7 +6,7 @@ import { ApiService } from './api.service';
 import { JwtService } from './jwt.service';
 import { AlertifyService } from './alertify.service';
 import { Review } from '../models/review.model';
-import { HttpParams } from '@angular/common/http';
+import { HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Util } from '../errors/helpers/util';
 import { Entity } from '../models/entity.model';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -24,18 +24,17 @@ import { GlobalService } from './global.service';
 })
 export class UserService {
   private currentUserSubject = new BehaviorSubject<User>({} as User);
-  public currentUser = this.currentUserSubject.asObservable().pipe(distinctUntilChanged());
+  public currentUser$ = this.currentUserSubject.asObservable().pipe(distinctUntilChanged());
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
-  public isAuthenticated = this.isAuthenticatedSubject.asObservable();
+  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
   private isAdminSubject = new BehaviorSubject<boolean>(false);
-  public isAdmin = this.isAdminSubject.asObservable();
+  public isAdmin$ = this.isAdminSubject.asObservable();
 
   private usersCountSubject = new BehaviorSubject<number>(0);
   public usersCount$ = this.usersCountSubject.asObservable();
 
-  public socialAuthServiceSubscription;
   constructor(
     private apiService: ApiService,
     private jwtService: JwtService,
@@ -44,28 +43,10 @@ export class UserService {
     private router: Router,
     private route: ActivatedRoute,
     private socialAuthService: AuthService,
-    private global: GlobalService
+    private global: GlobalService,
+    private errorHandler: ErrorHandler
   ) {
-    this.socialAuthServiceSubscription = this.socialAuthService.authState
-      .pipe(
-        mergeMap((user) => {
-          console.log('FB authenticated', user);
-          console.log('is authenticated? ', this.isAuthenticatedSubject.getValue());
-          if (user && user != null && !this.isAuthenticatedSubject.getValue()) {
-            return this.fbAuth(user.authToken);
-          }
-          return of();
-        })
-      )
-      .subscribe((data) => {
-        if (data.success) {
-          let returnUrl = this.route.snapshot.queryParams['returnUrl'];
-          if (returnUrl) {
-            returnUrl = decodeURIComponent(returnUrl);
-            this.router.navigate([returnUrl]);
-          }
-        }
-      });
+
   }
   // Verify JWT in localstorage with server & load user's info.
   // This runs once on application startup.
@@ -78,6 +59,7 @@ export class UserService {
         .pipe(
           map(resp => resp),
           catchError(err => {
+            console.log('purge auth due to an err', err);
             this.purgeAuth();
             this.alertifyService.error(this.errorUtil.getError(err) || 'Failed to get account details');
             return of([]);
@@ -411,7 +393,6 @@ export class UserService {
 
   signOut(): void {
     this.socialAuthService.signOut();
-    this.socialAuthServiceSubscription.unsubscribe();
   }
 
   isAdminOrEntityOwner(id: string): Observable<boolean> {
@@ -436,25 +417,34 @@ export class UserService {
         })
       );
   }
-  findUserEntities(
-    filter = '',
-    sortDirection = 'desc',
-    sortField = 'rating',
-    pageNumber: number = 1,
-    pageSize: number = 10,
+  findUserEntities(params: {
+    filter: string,
+    sortDirection: string,
+    sortField: string,
+    pageNumber: number,
+    pageSize: number,
     userId?: string
+  }
   ): Observable<Entity[]> {
-    userId = userId || '';
+    console.log('findUserEntities');
+    params = Object.assign({
+      filter: '',
+      sortDirection: 'desc',
+      sortField: 'rating',
+      pageNumber: 1,
+      pageSize: 10
+    }, params);
+    params.userId = params.userId || '';
     this.global.setLoadingRequests('findUserEntities', true);
     return this.apiService.get(
       `/user/entities`,
       new HttpParams()
-        .set('filter', filter)
-        .set('sortDirection', sortDirection)
-        .set('sortField', sortField)
-        .set('pageNumber', pageNumber.toString())
-        .set('pageSize', pageSize.toString())
-        .set('userId', userId)
+        .set('filter', params.filter)
+        .set('sortDirection', params.sortDirection)
+        .set('sortField', params.sortField)
+        .set('pageNumber', params.pageNumber.toString())
+        .set('pageSize', params.pageSize.toString())
+        .set('userId', params.userId)
     ).pipe(
       map((res) => {
         if (!res.success) {
@@ -474,41 +464,99 @@ export class UserService {
       })
     );
   }
-  findUserReviews(
-    filter = '',
-    sortDirection = 'desc',
-    sortField = 'rating',
-    pageNumber: number = 1,
-    pageSize: number = 10,
+  findUserReviews(params: {
+    filter: string | object,
+    sortDirection: string,
+    sortField: string,
+    pageNumber: number,
+    pageSize: number,
     userId?: string
+  }
   ): Observable<Review[]> {
-    userId = userId || '';
+    console.log('findUserReviews');
+    params = Object.assign({
+      filter: '',
+      sortDirection: 'desc',
+      sortField: 'rating',
+      pageNumber: 1,
+      pageSize: 10
+    }, params);
+    params.userId = params.userId || '';
     this.global.setLoadingRequests('findUserReviews', true);
     return this.apiService.get(
       `/user/reviews`,
       new HttpParams()
-        .set('filter', filter)
-        .set('sortDirection', sortDirection)
-        .set('sortField', sortField)
-        .set('pageNumber', pageNumber.toString())
-        .set('pageSize', pageSize.toString())
-        .set('userId', userId)
+        .set('filter', typeof params.filter === 'object' ? JSON.stringify(params.filter) : params.filter)
+        .set('sortDirection', params.sortDirection)
+        .set('sortField', params.sortField)
+        .set('pageNumber', params.pageNumber.toString())
+        .set('pageSize', params.pageSize.toString())
+        .set('userId', params.userId)
     ).pipe(
       map((res) => {
         if (!res.success) {
           this.alertifyService.error(this.errorUtil.getError(res) || 'Failed to load user reviews.');
           return of([]);
         }
+        const user = this.getCurrentUser() || <User>{};
+        user['foundReviews'] = res['data'];
+        console.log('findUserReviews data', res['data']);
+        this.currentUserSubject.next(<User>{});
+        this.currentUserSubject.next(user);
         return res['data'];
       }),
-      catchError(err => {
-        const error = this.errorUtil.getError(err, { getValidationErrors: true });
-        if (typeof error === 'object') { return of(error); }
-        this.alertifyService.error(error || 'Failed to load user reviews.');
-        return of([]);
+      catchError(error => {
+        console.log('findUserReviews Error!!! ', error);
+        if (error instanceof HttpErrorResponse || error['error'] instanceof HttpErrorResponse) {
+          if (error['error'] instanceof HttpErrorResponse) {
+            error = error['error'];
+          }
+          if (error.status === 401) {
+            return of(null);
+          }
+        }
+        this.errorHandler.handleError(error);
       }),
       finalize(() => {
         this.global.setLoadingRequests('findUserReviews', false);
+      })
+    );
+  }
+  findUserActivity(params: {
+    filter: string,
+    sortDirection: string,
+    sortField: string,
+    pageNumber: number,
+    pageSize: number,
+    userId?: string
+  }
+  ): Observable<any[]> {
+    params = Object.assign({
+      filter: '',
+      sortDirection: 'desc',
+      sortField: 'createdAt',
+      pageNumber: 1,
+      pageSize: 10
+    }, params);
+    this.global.setLoadingRequests('findUserActivity', true);
+    return this.apiService.get(
+      `/user/activity`,
+      new HttpParams()
+        .set('filter', params.filter)
+        .set('sortDirection', params.sortDirection)
+        .set('sortField', params.sortField)
+        .set('pageNumber', params.pageNumber.toString())
+        .set('pageSize', params.pageSize.toString())
+    ).pipe(
+      map((res) => {
+        if (!res.success) {
+          this.alertifyService.error(this.errorUtil.getError(res) || 'Failed to load user activity.');
+          return of(null);
+        }
+        return res;
+      }),
+      finalize(() => {
+        this.global.setLoadingRequests('findUserActivity', false);
       })
     );
   }

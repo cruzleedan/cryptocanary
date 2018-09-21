@@ -5,6 +5,62 @@
 @import '~@ngx-share/button/styles/share-buttons';
 @import '~@ngx-share/button/styles/themes/default/default-theme';
 
+@font-face {
+  font-family: Aquawax;
+  src: url(assets/fonts/Aquawax/Aquawax-DemiBold.ttf);
+}
+
+@font-face {
+  font-family: Aquawax;
+  src: url(assets/fonts/Aquawax/Aquawax-Light.ttf);
+  font-weight: 100;
+}
+
+@font-face {
+  font-family: 'Aquawax';
+  font-weight: 100;
+  src: url(assets/fonts/Aquawax/Aquawax-DemiBold.ttf);
+  unicode-range: U+30-39;
+}
+
+@font-face {
+  font-family: 'Encode Sans';
+  src: url(assets/fonts/EncodedSans/EncodeSans-Light.ttf);
+  font-weight: 100;
+}
+
+@font-face {
+  font-family: 'Encode Sans';
+  src: url(assets/fonts/EncodedSans/EncodeSans-Regular.ttf);
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Encode Sans';
+  src: url(assets/fonts/EncodedSans/EncodeSans-Medium.ttf);
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'Encode Sans';
+  src: url(assets/fonts/EncodedSans/EncodeSans-SemiBold.ttf);
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: 'Encode Sans';
+  src: url(assets/fonts/EncodedSans/EncodeSans-Bold.ttf);
+  font-weight: bold;
+}
+
+* {
+  font-family: 'Aquawax', 'Roboto', sans-serif;
+}
+
+html {
+  overflow: hidden;
+}
+
 html,
 body {
   height: 100%;
@@ -13,7 +69,15 @@ body {
 
 body {
   margin: 0;
-  font-family: 'Roboto', sans-serif;
+  overflow-x: hidden;
+}
+
+.font-roboto {
+  font-family: 'Roboto'
+}
+
+.font-aquawax {
+  font-family: 'Aquawax';
 }
 
 .white-bg {
@@ -119,6 +183,14 @@ $grey-10: #eeeeef;
   height: 60px;
   margin-right: 5px;
   padding: 0 20px;
+}
+
+.absolute-position-important {
+  position: absolute !important;
+}
+
+.abs-topmost {
+  top: 0px;
 }
 
 .full-width {
@@ -290,6 +362,10 @@ $img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4CAIAAAC2BqGFAAAAGXR
   width: 100%;
 }
 
+.break-all {
+  word-break: break-all;
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
@@ -320,31 +396,42 @@ a.a-container {
   padding: 0px;
   overflow: hidden;
 }
+
+.rating {
+  color: #9D9A9A;
+}
+
 .rating-super-shady {
   color: #000;
 }
+
 .rating-slightly-shady {
   color: #00cafc;
 }
+
 .rating-not-shady-at-all {
   color: #00e200;
 }
+
 .rating-shady {
   color: #ffa10e;
 }
+
 .rating-very-shady {
   color: red;
 }
 
 .auth-popup-form mat-dialog-container,
-.no-margin-dialog mat-dialog-container{
+.no-margin-dialog mat-dialog-container {
   padding: 0px 0px 10px 0px;
   overflow: hidden;
+
   mat-dialog-content {
     margin: 0px;
     padding: 0px;
   }
 }
+
 button.fb-button {
   cursor: pointer;
   background-color: #4b79ff;
@@ -356,8 +443,37 @@ button.fb-button {
   border-radius: 4px;
   height: 65px;
   padding: 10px;
+
   &:disabled {
     background-color: #85a4fffc;
     cursor: not-allowed;
+  }
+}
+
+.desc>* {
+  color: #9D9A9A !important;
+  font-size: 16px;
+  font-family: Aquawax, Encode Sans;
+  font-weight: 100;
+}
+
+button.green-text {
+  color: #00E608;
+}
+
+button.grey-text {
+  color: #C9C8C8;
+}
+
+.more-cont {
+  font-size: 10px;
+  font-family: Encode Sans;
+  font-weight: 500;
+  color: #9D9A9A;
+
+  span {
+    color: #0031F6;
+    margin-left: 5px;
+    cursor: pointer;
   }
 }

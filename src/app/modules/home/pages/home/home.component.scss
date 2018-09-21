@@ -1,3 +1,11 @@
+::ng-deep {
+  section.home mat-tab-group .mat-tab-label-content {
+    font-size: 18px;
+  }
+  section.home mat-tab-group .mat-tab-label.mat-tab-label-active .mat-tab-label-content{
+    font-weight: 500;
+  }
+}
 :host {
   section {
     margin-top: 20px;

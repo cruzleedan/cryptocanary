@@ -1,4 +1,4 @@
-<section>
+<section class="entity-reviews">
   <div class="review-item"
     fxLayout="row wrap"
     fxLayoutGap="10px"
@@ -12,9 +12,22 @@
     </div>
     <div class="content"
       fxFlex>
-      <div class="header">
-        <span class="name">{{ review.User.username || review.User.email }}</span> says <span class="rating rating-{{ review.rating | ratingLabel | replaceSpaces }}">{{
-          review.rating | ratingLabel }}</span>
+      <div class="header"
+        fxLayout="row"
+        fxLayoutAlign="stretch start"
+        fxLayoutGap="5px">
+        <span class="name">{{ review.User.username || review.User.email }}</span>
+        <span>says</span>
+        <span class="rating rating-{{ review.rating | ratingLabel | replaceSpaces }}">{{
+          review.rating | ratingLabel }}
+        </span>
+        <button *ngIf="userReview.length && review.id === userReview[0].id"
+          class="more-menu-btn"
+          mat-icon-button
+          [matMenuTriggerFor]="activityMenu"
+          [matMenuTriggerData]="{userReview: review}">
+          <mat-icon>more_horiz</mat-icon>
+        </button>
       </div>
       <div class="desc">
         {{ review.review }}
@@ -40,3 +53,15 @@
     class="more-cont">{{ entityReviews.length }} of {{ entityTotalReviews }} <span (click)="loadReviews()"> More
       reviews</span></div>
 </section>
+<mat-menu #activityMenu="matMenu">
+  <ng-template matMenuContent
+    let-userReview="userReview">
+    <button mat-menu-item
+      (click)="editReview(userReview)">
+      Edit
+    </button>
+    <button mat-menu-item>
+      Delete
+    </button>
+  </ng-template>
+</mat-menu>

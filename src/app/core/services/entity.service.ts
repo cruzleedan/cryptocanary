@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { HttpParams } from '@angular/common/http';
 import { Observable, of, BehaviorSubject } from 'rxjs';
-import { map, catchError, debounceTime, distinctUntilChanged, switchMap, shareReplay } from 'rxjs/operators';
+import { map, catchError, debounceTime, distinctUntilChanged, switchMap, shareReplay, finalize } from 'rxjs/operators';
 import { Entity } from '../models/entity.model';
 import { AlertifyService } from './alertify.service';
 import { Util } from '../errors/helpers/util';
+import { GlobalService } from './global.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,9 +18,13 @@ export class EntityService {
   private entitiesCountSubject = new BehaviorSubject<number>(0);
   public entitiesCount$ = this.entitiesCountSubject.asObservable();
 
+  private searchedEntities = new BehaviorSubject<Entity[]>([]);
+  public searchedEntities$ = this.searchedEntities.asObservable();
+
   constructor(
     private apiService: ApiService,
     private alertifyService: AlertifyService,
+    private globalService: GlobalService,
     private errorUtil: Util
   ) { }
   addNewEntity(
@@ -54,6 +59,7 @@ export class EntityService {
   }
 
   findEntityById(entityId: string): Observable<Entity> {
+    this.globalService.setLoadingRequests('findEntityById', true);
     return this.apiService.get(`/entities/${entityId}`)
       .pipe(
         map((res) => {
@@ -62,6 +68,9 @@ export class EntityService {
             return of(null);
           }
           return res.data ? res.data : of(false);
+        }),
+        finalize(() => {
+          this.globalService.setLoadingRequests('findEntityById', false);
         })
       );
   }
@@ -81,8 +90,9 @@ export class EntityService {
     const keywords: Observable<string> = Obj['keyword'],
       sortField = Obj['sortField'],
       sortDirection = Obj['sortDirection'],
-      pageNum = Obj['pageNum'],
+      pageNumber = Obj['pageNum'],
       pageSize = Obj['pageSize'];
+    this.globalService.setLoadingRequests('search', true);
     return keywords.pipe(
       debounceTime(400),
       distinctUntilChanged(),
@@ -92,29 +102,45 @@ export class EntityService {
           return of([]);
         }
         return this.findEntities(
-          { name: keyword },
-          sortDirection,
-          sortField,
-          pageNum,
-          pageSize
+          {
+            filter: { name: keyword },
+            sortDirection,
+            sortField,
+            pageNumber,
+            pageSize
+          }
         );
+      }),
+      finalize(() => {
+        this.globalService.setLoadingRequests('search', false);
       })
     );
   }
 
-  findEntities(
-    filter: object = {}, sortDirection = 'asc', sortField = 'createdAt',
-    pageNumber = 0, pageSize = 10
-  ): Observable<{ data: Entity[], count: number, pending: number }> {
-    this.searchingSubject.next(true);
+  findEntities(params: {
+    filter: object,
+    sortDirection: string,
+    sortField: string,
+    pageNumber: number,
+    pageSize: number
+  }): Observable<{ data: Entity[], count: number, pending: number }> {
+    params = Object.assign({
+      filter: {},
+      sortDirection: 'asc',
+      sortField: 'createdAt',
+      pageNumber: 0,
+      pageSize: 10
+    }, params);
+
+    this.globalService.setLoadingRequests('findEntities', true);
     return this.apiService.get(
       '/entities',
       new HttpParams()
-        .set('filter', JSON.stringify(filter))
-        .set('sortDirection', sortDirection)
-        .set('sortField', sortField)
-        .set('pageNumber', pageNumber.toString())
-        .set('pageSize', pageSize.toString())
+        .set('filter', JSON.stringify(params.filter))
+        .set('sortDirection', params.sortDirection)
+        .set('sortField', params.sortField)
+        .set('pageNumber', params.pageNumber.toString())
+        .set('pageSize', params.pageSize.toString())
     ).pipe(
       map((res) => {
         this.searchingSubject.next(false);
@@ -125,7 +151,11 @@ export class EntityService {
           this.alertifyService.error(this.errorUtil.getError(res) || 'Something went wrong while searching entities');
         }
         this.entitiesCountSubject.next(count);
+        this.searchedEntities.next(data);
         return { data, count, pending };
+      }),
+      finalize(() => {
+        this.globalService.setLoadingRequests('findEntities', false);
       })
     );
   }
@@ -172,8 +202,8 @@ export class EntityService {
     pageSize: string
   }): Observable<Entity[]> {
     params = Object.assign({
-      pageNumber : '0', // default pageNumber
-      pageSize : '10' // default pageSize
+      pageNumber: '0', // default pageNumber
+      pageSize: '10' // default pageSize
     }, params);
 
     return this.apiService.get(`/home/entities`,

@@ -1,18 +1,52 @@
+::ng-deep {
+
+  .entity-reviews .footer button.mat-button .mat-button-wrapper {
+    font-family: Encode Sans;
+    font-size: 12px;
+    font-weight: 500;
+
+  }
+}
+
+div,
+p,
+a,
+button,
+span {
+  font-family: Encode Sans;
+}
+
 section .review-item {
   margin-bottom: 10px;
 }
+
 img.icon {
   max-width: 100%;
   max-height: 100%;
   border-radius: 50px;
 }
-.more-cont {
-  span {
-    color: blue;
-    margin-left: 5px;
-    cursor: pointer;
-    &:hover {
-      text-decoration: underline;
-    }
+
+.header {
+
+  span.name,
+  span.rating {
+    font-weight: 600;
+  }
+}
+
+.desc,
+.header {
+  color: #404040
+}
+
+.desc {
+  margin-bottom: 3px;
+}
+.more-menu-btn {
+  height: 25px;
+  line-height: 14px;
+  width: 25px;
+  mat-icon {
+    line-height: 19px;
   }
 }

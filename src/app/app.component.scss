@@ -85,4 +85,25 @@
       }
     }
   }
+  mat-tab-group .mat-tab-label-content {
+    color: #D5D6D7;
+  }
+  mat-tab-group .mat-tab-label.mat-tab-label-active .mat-tab-label-content{
+    color: #EF790C;
+  }
+  button.grey-btn {
+    color: #9D9A9A;
+    &:hover {
+      color: inherit;
+    }
+    a {
+      text-decoration: none;
+    }
+    mat-icon {
+      margin-right: 5px;
+    }
+  }
+  mat-icon{
+    color: #AEAEAE;
+  }
 }

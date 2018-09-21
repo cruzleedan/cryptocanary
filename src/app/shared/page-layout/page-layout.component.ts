@@ -7,6 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class PageLayoutComponent implements OnInit {
   @Input() title = '';
+  @Input() size: string;
   constructor() { }
 
   ngOnInit() {

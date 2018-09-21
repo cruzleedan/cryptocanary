@@ -6,16 +6,16 @@ import { Breadcrumb, AuthGuard } from '../../core';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'reviews-projects'
+    redirectTo: 'activity'
   },
   {
-    path: 'reviews-projects',
+    path: 'activity',
     component: UserComponent,
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     data: {
       breadcrumbs: [
-        new Breadcrumb('Users', '/user')
+        new Breadcrumb('Home', '/home')
       ]
     }
   }

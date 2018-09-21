@@ -75,6 +75,10 @@ import { EntityCardOverviewComponent } from './entity-card-overview/entity-card-
 import { SocialShareButtonComponent } from './social-share-button/social-share-button.component';
 import { EntityReviewsComponent } from './entity-reviews/entity-reviews.component';
 import { AddReviewDialogComponent } from './add-review-dialog/add-review-dialog.component';
+import { LoadingComponent } from './loading/loading.component';
+import { CustomBlob } from './helpers/custom-blob';
+import { UserActivitiesComponent } from './user-activities/user-activities.component';
+import { MapToIterablePipe } from './pipes/map-to-iterable.pipe';
 
 @NgModule({
   imports: [
@@ -127,6 +131,7 @@ import { AddReviewDialogComponent } from './add-review-dialog/add-review-dialog.
     RatingLabelPipe,
     ReplaceSpacesPipe,
     RatingPercentPipe,
+    MapToIterablePipe,
     TopSearchComponent,
     SideNavComponent,
     GlobalNavComponent,
@@ -147,6 +152,8 @@ import { AddReviewDialogComponent } from './add-review-dialog/add-review-dialog.
     SocialShareButtonComponent,
     EntityReviewsComponent,
     AddReviewDialogComponent,
+    LoadingComponent,
+    UserActivitiesComponent
   ],
   exports: [
     CommonModule,
@@ -195,6 +202,7 @@ import { AddReviewDialogComponent } from './add-review-dialog/add-review-dialog.
     RatingLabelPipe,
     ReplaceSpacesPipe,
     RatingPercentPipe,
+    MapToIterablePipe,
     TopSearchComponent,
     SideNavComponent,
     GlobalNavComponent,
@@ -215,12 +223,15 @@ import { AddReviewDialogComponent } from './add-review-dialog/add-review-dialog.
     SocialShareButtonComponent,
     EntityReviewsComponent,
     AddReviewDialogComponent,
+    LoadingComponent,
+    UserActivitiesComponent
   ],
   providers: [
     { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
     MatIconRegistry,
     MatIcons,
-    DatePipe
+    DatePipe,
+    CustomBlob
   ],
   entryComponents: [
     MsgDialogComponent,

@@ -1,6 +1,28 @@
+.field label, mat-radio-group > * {
+  font-family: Encode Sans;
+  color: #757575;
+}
+
 form {
   padding: 0 24px;
 }
 .action-cont {
   padding: 5px 0px;
+}
+.title {
+  color: #545454;
+  font-size: 24px;
+}
+.field {
+  color: #3B3B3B;
+  margin-top: 20px;
+}
+.field .label {
+  font-size: 18px;
+}
+.field label {
+  font-size: 14px;
+}
+mat-radio-group {
+  margin: 10px;
 }

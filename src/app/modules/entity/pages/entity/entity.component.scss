@@ -1,17 +1,52 @@
 :host {
   display: block;
-  padding-top: 20px;
+}
+
+.rating-pct,
+.rating-label,
+.published-by,
+.published-date,
+.entity-header span.name {
+  font-family: Encode Sans;
+}
+
+.published-by,
+.published-date {
+  font-weight: 500;
+}
+.rating-pct,
+.rating-label {
+  font-weight: 600;
 }
 img.icon {
   max-width: 100%;
   max-height: 100%;
 }
+
 .entity-header {
   span {
     margin-right: 5px;
   }
+
   span.name {
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 30px;
+    font-weight: 600;
+    color: #BFBFBF;
+  }
+}
+
+.published-by {
+  font-size: 12px;
+  color: #656565;
+}
+
+.review-count, .published-date {
+  color: #C7C4C4;
+}
+
+.icon-cont {
+  img {
+    max-width: 120px;
+    max-height: 120px;
   }
 }

@@ -1,3 +1,12 @@
 mat-toolbar.full-height {
   height: 100%;
 }
+mat-toolbar {
+  height: 80px;
+}
+.a-container {
+  display: block;
+  img {
+    vertical-align: bottom;
+  }
+}

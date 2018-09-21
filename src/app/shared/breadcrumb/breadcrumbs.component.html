@@ -1,6 +1,32 @@
-<app-page-layout>
-    <span *ngFor="let b of breadcrumbs; let last = last">
+<app-page-layout [size]="size">
+  <section class="breadcrumbs"
+    fxLayout="row"
+    fxLayoutGap="5px"
+    fxLayoutAlign="stretch center">
+    <ng-container *ngFor="let b of breadcrumbs; let last = last">
+      <span>
         <a [routerLink]="b.href">{{ b.label }}</a>
-        <span *ngIf="!last" class="separator">/</span>
-    </span>
+      </span>
+      <mat-icon *ngIf="!last">chevron_right</mat-icon>
+    </ng-container>
+    <ng-container *ngIf="currentPages">
+      <ng-container *ngFor="let c of currentPages">
+        <mat-icon>chevron_right</mat-icon>
+        <span>
+          <ng-container *ngIf="c.href">
+            <a [routerLink]="c.href">{{ c.label }}</a>
+          </ng-container>
+          <ng-container *ngIf="!c.href">
+            {{ c.label }}
+          </ng-container>
+        </span>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="currentPage">
+      <mat-icon>chevron_right</mat-icon>
+      <span>
+        {{ currentPage.label }}
+      </span>
+    </ng-container>
+  </section>
 </app-page-layout>

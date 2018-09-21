@@ -1,0 +1,23 @@
+.activity {
+  color: #9D9A9A;
+}
+
+.date,
+.task-header-content {
+  font-size: 18px;
+
+  .task-title {
+    font-weight: 100;
+  }
+}
+
+.date {
+  margin-top: 15px;
+  color: #656565;
+}
+
+.task-desc {
+  font-size: 16px;
+  padding: 0px 0px 0px 50px;
+  font-weight: 100;
+}

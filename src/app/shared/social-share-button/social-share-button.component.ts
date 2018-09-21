@@ -6,10 +6,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./social-share-button.component.scss']
 })
 export class SocialShareButtonComponent implements OnInit {
-
+  currentUrl: string;
   constructor() { }
 
   ngOnInit() {
+    this.currentUrl = location.href;
   }
 
 }

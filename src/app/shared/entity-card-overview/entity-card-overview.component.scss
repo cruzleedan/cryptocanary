@@ -2,6 +2,7 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
 mat-card.entity-item {
   background-color: #f9f9f9;
   border: 1px solid #c6c6c6;
@@ -10,11 +11,20 @@ mat-card.entity-item {
 }
 
 .icon-cont {
-  max-width: 70px;
-  max-height: 70px;
+  max-width: 32px;
+  max-height: 32px;
 
   img.icon {
     width: 100%;
     height: 100%;
   }
 }
+
+.name {
+  color: #777777;
+}
+
+.name-label {
+  font-size: 24px;
+}
+

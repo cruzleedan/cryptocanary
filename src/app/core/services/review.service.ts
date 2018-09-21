@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { Observable, of, BehaviorSubject } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, finalize } from 'rxjs/operators';
 import { Review } from '../models/review.model';
 import { AlertifyService } from './alertify.service';
 import { Util } from '../errors/helpers/util';
 import { HttpParams } from '@angular/common/http';
+import { GlobalService } from './global.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class ReviewService {
   constructor(
     private apiService: ApiService,
     private alertifyService: AlertifyService,
+    private globalService: GlobalService,
     private errorUtil: Util
   ) { }
   findReviewById(reviewId: string): Observable<Review> {
@@ -49,6 +51,7 @@ export class ReviewService {
     entityId: string,
     newEntity: Object = {}
   ) {
+    this.globalService.setLoadingRequests('addReview', true);
     return this.apiService.put(`/entities/${entityId}/reviews/new`, newEntity)
       .pipe(
         map(res => {
@@ -58,9 +61,8 @@ export class ReviewService {
           }
           return res['data'];
         }),
-        catchError(err => {
-          this.alertifyService.error(this.errorUtil.getError(err) || 'Failed to add Review');
-          return of(null);
+        finalize(() => {
+          this.globalService.setLoadingRequests('addReview', false);
         })
       );
   }

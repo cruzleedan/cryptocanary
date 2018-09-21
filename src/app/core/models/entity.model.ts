@@ -1,5 +1,6 @@
 import { User } from './user.model';
 import { Category } from './category.model';
+import { Review } from './review.model';
 
 export interface Entity {
   id: string;
@@ -26,4 +27,5 @@ export interface Entity {
   deletedAt?: string;
   createdAt: string;
   updatedAt?: string;
+  Reviews?: Review[];
 }

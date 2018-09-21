@@ -1,9 +1,16 @@
-<app-breadcrumbs></app-breadcrumbs>
+<mat-progress-bar
+  *ngIf="loading"
+  mode="indeterminate"
+  color="primary"
+  class="absolute-position-important abs-topmost">
+</mat-progress-bar>
+<app-breadcrumbs [currentPage]="currentPage"></app-breadcrumbs>
 <app-page-layout>
-  <section fxLayout="row wrap"
+  <section class="entity"
+    fxLayout="row wrap"
     fxLayoutGap="20px">
     <div class="icon-cont"
-      fxFlex="1 1 12em">
+      fxFlex="1 1 9em">
       <img [src]="baseUrl+'/entity/'+entity.id+'/'+entity.image"
         onerror="this.onerror=null;this.src='assets/images/entities/default.png';"
         alt="icon"
@@ -22,10 +29,11 @@
           <span class="rating-pct">{{ entity | ratingPercent }}</span>
           <span class="rating-label">{{ entity.rating | ratingLabel }}</span>
         </span>
+        <span class="review-count">({{ entity.reviewCount }} {{ entity.reviewCount > 1 ? 'Reviews': 'Review' }})</span>
         <span fxFlex></span>
-        <span>{{ entity.createdAt | date}}</span>
+        <span class="published-date">{{ entity.createdAt | date}}</span>
       </div>
-      <div class="published-by">Added by: {{ entity.User.username }}</div>
+      <div class="published-by">Added by: {{ entity.User ? entity.User.username : '' }}</div>
       <div class="write-review-cont">
         <button mat-raised-button
           (click)="openAddReviewDialog()"
@@ -36,21 +44,25 @@
       <div class="entity-footer"
         fxLayout="row"
         fxLayoutGap="10px">
-        <button mat-button>
-          <mat-icon>message</mat-icon>
+        <button mat-button
+          class="grey-btn"
+          (click)="openAddReviewDialog()">
+          <mat-icon>forum</mat-icon>
           Add A Review
         </button>
         <ng-container *ngFor="let link of entity.links">
-          <button mat-button>
+          <button mat-button
+            (click)="linkBtn.click()"
+            class="grey-btn">
             <mat-icon>language</mat-icon>
-            <a href="{{link.link}}"
-              target="blank">{{ link.name }}</a>
+            <a href="{{link.link}}" #linkBtn
+              target="_blank">{{ link.name }}</a>
           </button>
         </ng-container>
         <app-social-share-button></app-social-share-button>
       </div>
       <section class="review-cont">
-        <app-entity-reviews [entityId$]="entityId$"></app-entity-reviews>
+        <app-entity-reviews [entityId$]="entityId$" (editUserReview)="openAddReviewDialog($event.id)"></app-entity-reviews>
       </section>
     </div>
   </section>

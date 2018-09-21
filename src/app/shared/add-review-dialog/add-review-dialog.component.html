@@ -1,9 +1,13 @@
+<mat-progress-bar mode="indeterminate"
+  *ngIf="loading"
+  color="primary">
+</mat-progress-bar>
 <div class="top-action"
   fxLayout="row">
-  <div class="title"
+  <div
     fxFlex
     fxFlexAlign="center"
-    class="align-center">Add A Review</div>
+    class="title align-center">{{ userReview && userReview.length ? 'Edit Existing Review' : 'Add A Review'}}</div>
   <button mat-icon-button
     fxFlexAlign="end"
     [mat-dialog-close]="true">
@@ -11,15 +15,16 @@
   </button>
 </div>
 <mat-dialog-content>
-  <form>
+  <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
     <div class="field"
       fxLayout="column">
-      <span class="label">Add your rating</span>
-      <label>Add your rating according to your experience</label>
+      <span class="label">{{userReview && userReview.length ? 'Edit' : 'Add'}} your rating</span>
+      <label>{{userReview && userReview.length ? 'Edit' : 'Add'}} your rating according to your experience</label>
       <mat-radio-group fxLayout="row"
+        formControlName="rating"
         fxLayoutGap="10px">
         <div fxLayout="column"
-          fxLayoutGap="5px">
+          fxLayoutGap="10px">
           <mat-radio-button color="primary"
             value="1">
             Not Shady At All
@@ -34,7 +39,7 @@
           </mat-radio-button>
         </div>
         <div fxLayout="column"
-          fxLayoutGap="5px">
+          fxLayoutGap="10px">
           <mat-radio-button color="primary"
             value="4">
             Very Shady
@@ -47,15 +52,14 @@
       </mat-radio-group>
     </div>
     <div class="field" fxLayout="column">
-      <span class="label">Add your review</span>
+      <span class="label">{{userReview && userReview.length ? 'Edit' : 'Add'}} your review</span>
       <mat-form-field fxFlex appearance="outline">
-        <textarea matInput
-          rows="10"
-          placeholder="Write your review here..."></textarea>
+        <textarea [errorStateMatcher]="matcher" matInput placeholder="Share your honest experience, and help others make better choices."
+          formControlName="review" matTextareaAutosize matAutosizeMinRows=10></textarea>
       </mat-form-field>
     </div>
     <div fxLayout="row" fxLayoutAlign="end" class="action-cont">
-      <button mat-raised-button color="primary">Submit</button>
+      <button mat-raised-button color="primary">SUBMIT</button>
     </div>
   </form>
 </mat-dialog-content>

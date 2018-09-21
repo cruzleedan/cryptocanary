@@ -23,6 +23,8 @@ export class MsgDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<MsgDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data
   ) {
+    console.log('MESSAGE DIALOG CONSTRUCTOR ', this.data);
+
     if (this.data.type && this.data.type === 'error') {
       const charCount = 100;
       this.msg = this.data.msg || 'Something went wrong!';
@@ -42,7 +44,7 @@ export class MsgDialogComponent implements OnInit {
   }
   auth(event) {
     this.attemptAuth.emit(event);
-    this.userService.isAuthenticated.subscribe(auth => {
+    this.userService.isAuthenticated$.subscribe(auth => {
       if (auth) {
         this.dialogRef.close(event);
       }

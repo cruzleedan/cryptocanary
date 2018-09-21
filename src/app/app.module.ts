@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -33,6 +33,7 @@ import { NotificationService } from './core/errors/services/notification/notific
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from '@angular/flex-layout';
 import { HttpService } from './core/errors/services/http/http.service';
+import { HttpTokenInterceptor } from './core';
 
 const config = new AuthServiceConfig([
   {
@@ -59,9 +60,9 @@ export function provideConfig() {
   ],
   imports: [
     BrowserModule,
+    CoreModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    CoreModule,
     SharedModule,
     SocialLoginModule,
     AppRoutingModule,
@@ -69,6 +70,7 @@ export function provideConfig() {
   ],
   exports: [BrowserAnimationsModule],
   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: HttpTokenInterceptor, multi: true },
     {
       provide: AuthServiceConfig,
       useFactory: provideConfig

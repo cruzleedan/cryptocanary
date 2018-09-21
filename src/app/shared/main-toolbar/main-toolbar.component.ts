@@ -32,11 +32,11 @@ export class MainToolbarComponent implements OnInit {
   constructor(
     private userService: UserService
   ) {
-    this.userService.isAuthenticated
+    this.userService.isAuthenticated$
       .subscribe(isAuthenticated => {
         this.isAuthenticated = isAuthenticated;
       });
-      this.userService.currentUser
+      this.userService.currentUser$
       .subscribe(user => {
           this.user = user;
           this.toolbarHelpers.currentUser.currentUserName = this.user.username;

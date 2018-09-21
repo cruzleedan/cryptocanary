@@ -1,20 +1,25 @@
-<mat-progress-bar *ngIf="loading"></mat-progress-bar>
+<mat-progress-bar mode="indeterminate"
+  *ngIf="loading"
+  color="primary">
+</mat-progress-bar>
 <div class="cover"
   fxLayout="row">
-  <div fxFlex="2 2 calc(15em + 20px)"
+  <div fxFlex
     fxLayoutAlign="center center">
-    <div fxLayout="column" class="main-cont">
+    <div fxLayout="column"
+      class="main-cont">
       <div class="logo-container">
-        <img src="assets/images/logo/cryptocanary-light.png"
+        <img src="assets/images/logo/canary-white-1.png"
           alt="logo">
-        <div class="sub-title"><span>the</span><span>cryptocanary</span></div>
       </div>
       <br><br><br>
-      <div class="align-center">Excepteur eu anim non sit irure magna laboris laborum laboris.</div>
+      <div class="align-center marketing-phrase">Help each other clean the crypto world from scammy projects!</div>
       <br>
-      <div class="align-center">Excepteur eu anim non sit irure magna laboris laborum laboris.</div>
-      <br>
-      <button class="fb-button margin-top" (click)="signInWithFB()" [disabled]="loading">CONTINUE VIA FACEBOOK</button>
+      <!-- <div class="align-center">Excepteur eu anim non sit irure magna laboris laborum laboris.</div>
+      <br> -->
+      <button class="fb-button margin-top"
+        (click)="signInWithFB()"
+        [disabled]="loading">CONTINUE VIA FACEBOOK</button>
     </div>
   </div>
   <div fxFlex

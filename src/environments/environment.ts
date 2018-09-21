@@ -11,6 +11,9 @@ export const environment = {
       login: 'api/auth/login',
       validateToken: 'api/auth/validatetoken'
   },
+  tinyMce: {
+    apiKey: 'p3c7sdbs7ut72lnvt86hupurdlo7mmk4pko0ec476qsvs5px'
+  },
   fbConfig: {
       appId: '2252702861425537',
       status: false,  // the SDK will attempt to get info about the current user immediately after init

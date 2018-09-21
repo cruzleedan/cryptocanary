@@ -1,0 +1,119 @@
+<app-breadcrumbs [currentPage]="currentPage" [currentPages]="currentPages"></app-breadcrumbs>
+<app-page-layout>
+  <section>
+    <form [formGroup]="entityForm"
+      (ngSubmit)="handleSubmit()"
+      #form="ngForm">
+      <div class="">Project Details</div>
+      <div class="content"
+        fxLayout="row"
+        fxLayoutGap="10px">
+        <div fxFlex="1 1 15em">
+          <!-- Logo upload starts  -->
+          <input type="file"
+            accept="image/*"
+            (change)="fileChangeEvent($event)"
+            #entityImgFile
+            style="display: none"
+            [formControl]="imgFormControl">
+          <div class="logo-upload"
+            fxLayout="column">
+            <div class="img-cont">
+              <mat-icon fontSet="fa"
+                fontIcon="fa-camera"
+                (click)="entityImgFile.click()">
+              </mat-icon>
+              <img [src]="croppedImage || entityImgUrl"
+                *ngIf="croppedImage || entityImgUrl"
+                onerror="this.onerror=null;this.src='/assets/images/default.png';">
+            </div>
+            <mat-progress-bar mode="determinate"
+              *ngIf="uploading"
+              [value]="(uploadProgress | async)"
+              color="warn">
+            </mat-progress-bar>
+          </div>
+          <!-- Logo upload ends  -->
+        </div>
+        <div fxFlex
+          fxLayout="column">
+          <mat-form-field appearance="fill">
+            <mat-label>Name</mat-label>
+            <input matInput
+              placeholder="Entity Name"
+              required
+              formControlName="name">
+          </mat-form-field>
+          <div>
+            <form formArrayName="links"
+              *ngFor="let link of getControls(entityForm, 'links'); let i=index">
+              <div [formGroupName]="i"
+                fxLayout="row"
+                fxLayoutGap="10px"
+                fxLayout.lt-md="column">
+
+                <mat-form-field fxFlex
+                  fxFlex.lt-md="0 1 auto"
+                  appearance="outline"
+                  fxHide>
+                  <input matInput
+                    placeholder="name"
+                    formControlName="name"
+                    value="OfficialWebsite">
+                </mat-form-field>
+                <mat-form-field fxFlex
+                  fxFlex.lt-md="0 1 auto"
+                  appearance="fill">
+                  <mat-label>Project Website</mat-label>
+                  <input matInput
+                    placeholder="link"
+                    formControlName="link">
+                </mat-form-field>
+                <!-- <div fxLayoutAlign="end">
+                  <button mat-mini-fab
+                    color="warn"
+                    (click)="removeLink(i)">
+                    <mat-icon aria-label="Remove">remove</mat-icon>
+                  </button>
+                </div> -->
+              </div>
+            </form>
+            <!-- <div fxLayoutAlign="end">
+              <button type="button"
+                mat-mini-fab
+                (click)="addLink()"
+                color="primary">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div> -->
+          </div>
+          <editor [apiKey]="tinyMceApiKey"
+            formControlName="desc"
+            [init]="tinyMceInit">
+          </editor>
+        </div>
+      </div>
+      <br>
+      <div fxLayoutAlign="end"
+        fxLayoutGap="5px">
+        <button type='submit'
+          mat-stroked-button
+          color="accent"
+          [disabled]='loading || !entityForm.valid || (!(isEdit && imgFormControl.value) && !entityForm.valid)'>
+          <ng-container *ngIf="!isEdit && !loading">
+            Submit
+          </ng-container>
+          <ng-container *ngIf="isEdit && !loading">
+            Save
+          </ng-container>
+          <ng-container *ngIf="loading">Saving...</ng-container>
+        </button>
+        <button type='button'
+          mat-stroked-button
+          color="accent"
+          [disabled]="loading"
+          (click)='resetForm()'>Reset</button>
+      </div>
+    </form>
+  </section>
+</app-page-layout>

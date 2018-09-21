@@ -1,11 +1,11 @@
 <form class="component--app-top-search ng-untouched ng-pristine ng-valid"
   novalidate="">
-  <mat-form-field appearance="legacy"
+  <mat-form-field appearance="outline"
     floatLabel="never"
     hintLabel="">
     <mat-icon matPrefix>search</mat-icon>
     <input type="text"
-      placeholder="Search"
+      placeholder="search canary"
       aria-label="Search"
       matInput
       [formControl]="searchCtrl"
@@ -20,12 +20,31 @@
         <mat-option *ngFor="let entity of filteredOptions"
           [value]="entity"
           [routerLink]="['/entity/'+entity.id]">
-          {{entity.name}}
+          <div class="icon-cont">
+            <img [src]="baseUrl+'/entity/'+entity.id+'/'+entity.image"
+              onerror="this.onerror=null;this.src='assets/images/entities/default.png';"
+              alt="icon"
+              class="icon">
+          </div>
+          <div class="name"
+            fxFlex
+            fxLayout="row"
+            fxLayoutGap="10px"
+            fxLayoutAlign="stretch center">
+            <span class="name-label">{{ entity.name }}</span>
+          </div>
+          <div class="rating rating-{{ entity.rating | ratingLabel | replaceSpaces}}">{{ entity | ratingPercent }} {{
+            entity.rating | ratingLabel }}</div>
         </mat-option>
       </ng-container>
     </mat-autocomplete>
-    <button matSuffix mat-button *ngIf="searchCtrl.value" mat-icon-button aria-label="Clear" (click)="clearSearch()">
-        <mat-icon>close</mat-icon>
+    <button matSuffix
+      mat-button
+      *ngIf="searchCtrl.value"
+      mat-icon-button
+      aria-label="Clear"
+      (click)="clearSearch()">
+      <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
 </form>

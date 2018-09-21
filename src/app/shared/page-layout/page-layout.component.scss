@@ -12,6 +12,9 @@
   padding: 10px;
   width: 100%;
   box-sizing: border-box;
+  &.wide {
+    max-width: 1320px;
+  }
 }
 .page-layout-header .label span {
   font-size: 20px;

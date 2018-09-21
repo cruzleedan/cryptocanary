@@ -1,8 +1,46 @@
-.avatar-cont {
-  background-color: #f3f3f3;
-  border-radius: 1px;
-  img {
-    width: 100%;
-    height: 100%;
+.side-content {
+  max-width: 205px;
+  color: #3D3D3D;
+
+  .user-details {
+    margin-top: 15px;
+
+    form, form mat-form-field {
+      font-size: 14px;
+      max-width: 100%;
+    }
+  }
+
+  .username {
+    font-size: 24px;
+  }
+
+  .email {
+    font-size: 14px;
+  }
+
+  .avatar-cont {
+    background-color: #f3f3f3;
+    border-radius: 1px;
+    max-width: 100%;
+    max-height: 100%;
+
+    img {
+      max-height: 205px;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  mat-nav-list.slim {
+    margin-top: 100px;
+
+    mat-list-item.active {
+      color: #EF790C;
+
+      mat-icon {
+        color: #EF790C
+      }
+    }
   }
 }
