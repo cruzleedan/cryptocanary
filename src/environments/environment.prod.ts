@@ -1,8 +1,8 @@
 export const environment = {
   production: false,
-  baseUrl: 'https://cryptocautionapi.herokuapp.com',
-  baseApiUrl: 'https://cryptocautionapi.herokuapp.com/api/v1',
-  domain: 'https://cryptocautionapi.herokuapp.com',
+  baseUrl: 'https://cryptocanary-api.herokuapp.com',
+  baseApiUrl: 'https://cryptocanary-api.herokuapp.com/api/v1',
+  domain: 'https://cryptocanary-api.herokuapp.com',
   api: {
       login: 'api/auth/login',
       validateToken: 'api/auth/validatetoken'
