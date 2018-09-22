@@ -8,6 +8,7 @@ import { debounceTime, map, distinctUntilChanged, switchMap, tap, takeUntil, tak
 import { Subject } from 'rxjs';
 import { ImageCropperDialogComponent } from '../../../../shared/cropper/image-cropper-dialog.component';
 import { CustomBlob } from '../../../../shared/helpers/custom-blob';
+import { GlobalService } from '../../../../core/services/global.service';
 
 @Component({
   selector: 'app-user',
@@ -19,6 +20,7 @@ export class UserComponent implements OnInit, OnDestroy {
   currentPage: Breadcrumb;
   user: User;
   editUsername: boolean;
+  loading: boolean;
   usernameForm: FormGroup;
   matcher = new ShowOnDirtyErrorStateMatcher();
 
@@ -35,8 +37,13 @@ export class UserComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private alertifyService: AlertifyService,
     private dialog: MatDialog,
-    private customBlob: CustomBlob
+    private customBlob: CustomBlob,
+    private globalService: GlobalService
   ) {
+    this.globalService.loadingRequests$
+    .subscribe((requests) => {
+      this.loading = !!(requests['findUserActivity']);
+    });
     this.usernameForm = new FormGroup({
       username: new FormControl('', [
         Validators.required,

@@ -3,6 +3,7 @@ import { MatTabChangeEvent } from '@angular/material';
 import { EntityService } from '../../../../core';
 import { Subject } from 'rxjs';
 import { takeUntil, debounceTime } from 'rxjs/operators';
+import { GlobalService } from '../../../../core/services/global.service';
 
 @Component({
   selector: 'app-home',
@@ -11,10 +12,17 @@ import { takeUntil, debounceTime } from 'rxjs/operators';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   entities = [];
+  loading: boolean;
   destroySubject$: Subject<void> = new Subject();
   constructor(
-    private entityService: EntityService
-  ) { }
+    private entityService: EntityService,
+    private globalService: GlobalService
+  ) {
+    this.globalService.loadingRequests$
+    .subscribe((requests) => {
+      this.loading = !!(requests['getEntities']);
+    });
+  }
 
   ngOnInit() {
     this.getEntities([['createdAt', 'desc']]); // default will be new projects
@@ -27,7 +35,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.entityService.getEntities({
       field: field,
       pageNumber: '0',
-      pageSize: '5'
+      pageSize: '10'
     })
       .pipe(
         debounceTime(400),

@@ -17,7 +17,7 @@
       fxLayoutAlign="stretch center">
       <span class="name-label">{{ entity.name }}</span>
 
-      <div fxFlexAlign="flex-end">
+      <!-- <div fxFlexAlign="flex-end">
         <mat-icon class="align-center"
         fontSet="fa"
           fontIcon="fa-calendar">
@@ -25,9 +25,9 @@
         <span>
           {{ entity.createdAt | dateTimeMomentFormat:'YYYY-MM-DD HH:mm:ss'}}
         </span>
-      </div>
+      </div> -->
     </div>
-    <div class="rating rating-{{ entity.rating | ratingLabel | replaceSpaces}}">{{ entity | ratingPercent }} {{
-      entity.rating | ratingLabel }}</div>
+    <div class="rating rating-{{ entity.reviewCount ? (entity.rating | ratingLabel | replaceSpaces): '' }}">{{ entity | ratingPercent }} {{
+      entity.reviewCount ? (entity.rating | ratingLabel): '' }}</div>
   </mat-card>
 </a>

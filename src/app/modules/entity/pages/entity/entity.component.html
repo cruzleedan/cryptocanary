@@ -11,8 +11,7 @@
     fxLayoutGap="20px">
     <div class="icon-cont"
       fxFlex="1 1 9em">
-      <img [src]="baseUrl+'/entity/'+entity.id+'/'+entity.image"
-        onerror="this.onerror=null;this.src='assets/images/entities/default.png';"
+      <img appCheckImage [src]="baseUrl+'/entity/'+entity.id+'/'+entity.image"
         alt="icon"
         class="icon">
     </div>

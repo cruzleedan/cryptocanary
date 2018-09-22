@@ -47,6 +47,8 @@ import { EditorModule } from '@tinymce/tinymce-angular';
 import { ShareButtonsModule } from '@ngx-share/buttons';
 import { ImageCropperModule } from 'ngx-image-cropper';
 
+import { CheckImageDirective } from './directives/check-image.directive';
+
 import { StrToJSONPipe } from './pipes/str-to-json.pipe';
 import { PctPipe } from './pipes/pct.pipe';
 import { CapitalizePipe } from './pipes/capitalize.pipe';
@@ -124,6 +126,7 @@ import { MapToIterablePipe } from './pipes/map-to-iterable.pipe';
     ShareButtonsModule.forRoot(),
   ],
   declarations: [
+    CheckImageDirective,
     StrToJSONPipe,
     PctPipe,
     CapitalizePipe,
@@ -195,6 +198,7 @@ import { MapToIterablePipe } from './pipes/map-to-iterable.pipe';
     EditorModule,
     ShareButtonsModule,
     ImageCropperModule,
+    CheckImageDirective,
     StrToJSONPipe,
     PctPipe,
     CapitalizePipe,

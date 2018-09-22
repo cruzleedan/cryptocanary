@@ -7,8 +7,11 @@ import { Entity } from '../../core/models/entity.model';
 export class RatingPercentPipe implements PipeTransform {
 
   transform(entity: Entity, args?: any): any {
+    let overallRating: string | number = 'Not Rated';
     if (entity.rating && entity.reviewCount) {
-      return (entity.rating / 5) * 100 + '%';
+      overallRating = (entity.rating / 5) * 100;
+      overallRating = Math.round(overallRating * 100) / 100;
+      return overallRating + '%';
     }
     const maxRating = 5,
       superShady = 5 / maxRating,
@@ -55,9 +58,10 @@ export class RatingPercentPipe implements PipeTransform {
       notShadyAtAllPct = notShadyAtAll * notShadyAtAllCount;
 
     const reviewCount = entity.reviewCount;
-    let overallRating: string | number = 'Not Rated';
+
     if (reviewCount) {
       overallRating = ((superShadyPct + veryShadyPct + shadyPct + slightlyShadyPct + notShadyAtAllPct) / reviewCount) * 100;
+      overallRating = Math.round(overallRating * 100) / 100;
       overallRating = overallRating + '%';
     }
     return overallRating;

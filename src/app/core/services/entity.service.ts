@@ -205,7 +205,7 @@ export class EntityService {
       pageNumber: '0', // default pageNumber
       pageSize: '10' // default pageSize
     }, params);
-
+    this.globalService.setLoadingRequests('getEntities', true);
     return this.apiService.get(`/home/entities`,
       new HttpParams()
         .set('field', JSON.stringify(params.field))
@@ -219,7 +219,10 @@ export class EntityService {
         }
         return res.data;
       }),
-      shareReplay()
+      shareReplay(),
+      finalize(() => {
+        this.globalService.setLoadingRequests('getEntities', false);
+      })
     );
   }
   delete(entityId: string): Observable<Object> {

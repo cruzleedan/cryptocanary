@@ -1,3 +1,9 @@
+<mat-progress-bar
+  *ngIf="loading"
+  mode="indeterminate"
+  color="primary"
+  class="absolute-position-important abs-topmost"
+></mat-progress-bar>
 <app-breadcrumbs [size]="'wide'"
   [currentPage]="currentPage"></app-breadcrumbs>
 <app-page-layout [size]="'wide'">

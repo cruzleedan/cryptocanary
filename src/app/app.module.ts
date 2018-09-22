@@ -34,6 +34,7 @@ import { SharedModule } from './shared/shared.module';
 import { HttpService } from './core/errors/services/http/http.service';
 import { HttpTokenInterceptor, CoreModule } from './core';
 
+
 const config = new AuthServiceConfig([
   {
     id: FacebookLoginProvider.PROVIDER_ID,
@@ -55,7 +56,7 @@ export function provideConfig() {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
