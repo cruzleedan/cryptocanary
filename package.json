@@ -36,6 +36,7 @@
     "alertifyjs": "^1.11.1",
     "angularx-social-login": "^1.2.3",
     "core-js": "^2.5.4",
+    "express": "^4.16.3",
     "font-awesome": "^4.7.0",
     "moment": "^2.22.2",
     "ngx-image-cropper": "^1.0.2",
