@@ -48,5 +48,6 @@ img.icon {
   img {
     max-width: 120px;
     max-height: 120px;
+    transition: opacity .5s ease-in;
   }
 }

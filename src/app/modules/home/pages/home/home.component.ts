@@ -46,6 +46,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       });
   }
   selectedTabChange(event: MatTabChangeEvent) {
+    this.entities = [];
     const tab = event.tab.textLabel;
     if (tab === 'SHADIEST PROJECTS') {
       // sort entities by shadiest to least shady
