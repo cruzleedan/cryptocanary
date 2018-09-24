@@ -4,9 +4,6 @@ const path = require('path');
 
 const app = express();
 
-// Serve only the static files form the dist directory
-app.use(express.static(__dirname + '/dist/cryptocanary'));
-
 // middleware
 //basic authentication for the prototype
 var basicAuth = require('basic-auth');
@@ -34,10 +31,10 @@ var auth = function (req, res, next) {
   }
 };
 app.use(auth);
-app.get('/', function (req, res) {
 
-  res.sendFile(path.join(__dirname + '/dist/cryptocanary/index.html'));
-});
+// Serve only the static files form the dist directory
+app.use(express.static(__dirname + '/dist/cryptocanary'));
+
 app.get('/*', function (req, res) {
 
   res.sendFile(path.join(__dirname + '/dist/cryptocanary/index.html'));
