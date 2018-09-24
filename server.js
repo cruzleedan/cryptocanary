@@ -25,6 +25,6 @@ server({
     password: process.env.PASSWORD,
     port: 1234,
     realm: 'Private',
-    root: path.join(__dirname + '/dist/cryptocanary/index.html'),
+    root: path.join(__dirname + '/dist/cryptocanary/'),
     username: process.env.USERNAME
 })
