@@ -12,7 +12,7 @@ app.use(express.static(__dirname + '/dist/cryptocanary'));
 var basicAuth = require('basic-auth');
 
 var auth = function (req, res, next) {
-  if (cfg.env === 'development') {
+  if (process.env === 'development') {
     return next();
   }
 
@@ -23,11 +23,11 @@ var auth = function (req, res, next) {
 
   var user = basicAuth(req);
 
-  if (!user || !user.name || !user.pass) {
+  if (!user || !user.username || !user.password) {
     return unauthorized(res);
   }
 
-  if (user.name === cfg.basicAuth.user && user.pass === cfg.basicAuth.pass) {
+  if (user.username === process.USERNAME && user.password === process.PASSWORD) {
     return next();
   } else {
     return unauthorized(res);
