@@ -23,11 +23,11 @@ var auth = function (req, res, next) {
 
   var user = basicAuth(req);
 
-  if (!user || !user.username || !user.password) {
+  if (!user || !user.name || !user.pass) {
     return unauthorized(res);
   }
 
-  if (user.username === process.USERNAME && user.password === process.PASSWORD) {
+  if (user.name === process.USERNAME && user.pass === process.PASSWORD) {
     return next();
   } else {
     return unauthorized(res);
