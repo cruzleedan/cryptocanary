@@ -27,13 +27,17 @@ var auth = function (req, res, next) {
     return unauthorized(res);
   }
 
-  if (user.name === process.USERNAME && user.pass === process.PASSWORD) {
+  if (user.name === process.env.USERNAME && user.pass === process.env.PASSWORD) {
     return next();
   } else {
     return unauthorized(res);
   }
 };
 app.use(auth);
+app.get('/', function (req, res) {
+
+  res.sendFile(path.join(__dirname + '/dist/cryptocanary/index.html'));
+});
 app.get('/*', function (req, res) {
 
   res.sendFile(path.join(__dirname + '/dist/cryptocanary/index.html'));
