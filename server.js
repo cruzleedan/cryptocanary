@@ -1,30 +1,45 @@
-// //Install express server
-// const express = require('express');
+//Install express server
+const express = require('express');
 const path = require('path');
 
-// const app = express();
+const app = express();
 
-// // Serve only the static files form the dist directory
-// app.use(express.static(__dirname + '/dist/cryptocanary'));
+// Serve only the static files form the dist directory
+app.use(express.static(__dirname + '/dist/cryptocanary'));
 
-// app.get('/*', function (req, res) {
+// middleware
+//basic authentication for the prototype
+var basicAuth = require('basic-auth');
 
-//   res.sendFile(path.join(__dirname + '/dist/cryptocanary/index.html'));
-// });
+var auth = function (req, res, next) {
+  if (cfg.env === 'development') {
+    return next();
+  }
 
-// // Start the app by listening on the default Heroku port
-// app.listen(process.env.PORT || 8080);
+  function unauthorized(res) {
+    res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+    return res.send(401);
+  }
 
-var server = require('auth-static')
+  var user = basicAuth(req);
 
-server({
-    options: {
-        cache: 3600,
-        gzip: true
-    },
-    password: process.env.PASSWORD,
-    port: 1234,
-    realm: 'Private',
-    root: './dist/cryptocanary/',
-    username: process.env.USERNAME
-})
+  if (!user || !user.name || !user.pass) {
+    return unauthorized(res);
+  }
+
+  if (user.name === cfg.basicAuth.user && user.pass === cfg.basicAuth.pass) {
+    return next();
+  } else {
+    return unauthorized(res);
+  }
+};
+
+app.use(auth());
+
+app.get('/*', function (req, res) {
+
+  res.sendFile(path.join(__dirname + '/dist/cryptocanary/index.html'));
+});
+
+// Start the app by listening on the default Heroku port
+app.listen(process.env.PORT || 8080);
