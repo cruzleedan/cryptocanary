@@ -34,9 +34,7 @@ var auth = function (req, res, next) {
   }
 };
 
-app.use(auth());
-
-app.get('/*', function (req, res) {
+app.get('/*', auth, function (req, res) {
 
   res.sendFile(path.join(__dirname + '/dist/cryptocanary/index.html'));
 });
