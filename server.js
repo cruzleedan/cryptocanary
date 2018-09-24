@@ -25,6 +25,6 @@ server({
     password: process.env.PASSWORD,
     port: 1234,
     realm: 'Private',
-    root: './example',
+    root: './cryptocanary',
     username: process.env.USERNAME
 })
