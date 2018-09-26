@@ -68,6 +68,8 @@ export class EntityActionButtonsComponent implements OnInit {
         if (resp && resp.approved) {
           this.afterApprove.emit(resp);
           this.alertifyService.success(`${this.entity.name} has been approved`);
+        } else {
+          this.entity.approved = !this.entity.approved;
         }
       });
   }

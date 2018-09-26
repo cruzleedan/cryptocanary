@@ -66,6 +66,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     let filter = {};
     if (this.isAdmin) {
       filter = { approved: false }; // default to pending tab if user is admin
+    } else {
+      filter = { approved: true };
     }
     this.getEntities({
       field: [['createdAt', 'desc']],

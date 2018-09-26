@@ -73,7 +73,7 @@ export class UserService {
             if (data.success) {
               this.isAuthenticatedSubject.next(true);
               this.currentUserSubject.next(data.user);
-              const roles = data.user.roles instanceof Array ? data.user.roles : [];
+              const roles = this.getUserRoles(data.user);
               this.isAdminSubject.next(roles.includes('admin'));
             } else {
               console.log('Purge user data since data.length is 0');
@@ -150,7 +150,7 @@ export class UserService {
             map(resp => {
               try {
                 console.log('Resp', resp);
-                const roles = resp.user.roles instanceof Array ? resp.user.roles : [];
+                const roles = this.getUserRoles(resp.user);
                 this.isAdminSubject.next(roles.includes('admin'));
                 return roles.includes('admin');
               } catch (e) {
@@ -178,12 +178,24 @@ export class UserService {
     // Set isAuthenticated to true
     this.isAuthenticatedSubject.next(true);
     // check if user has admin role
-    const roles = user.roles instanceof Array ? user.roles : [];
+    const roles = this.getUserRoles(user);
     console.log('setAuth check user if admin', roles);
 
     this.isAdminSubject.next(roles.includes('admin'));
   }
+  getUserRoles(user) {
+    let roles = [];
+    if (user && user.roles && typeof user.roles === 'string') {
+      try {
+        roles = JSON.parse(user.roles);
+      } catch (e) {
 
+      }
+    } else if (user && user.roles && user.roles instanceof Array) {
+      roles = user.roles;
+    }
+    return roles;
+  }
   purgeAuth() {
     console.log('purgeAuth initiated');
     // Remove JWT from localstorage
