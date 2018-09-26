@@ -38,7 +38,9 @@
       </mat-tab>
     </mat-tab-group>
   </section>
-  <section fxLayout="row" fxLayoutAlign="center">
+  <section [fxHide]="!isAdmin"
+    fxLayout="row"
+    fxLayoutAlign="center">
     <mat-paginator #paginator
       [length]="length"
       [pageSize]="pageSize"
