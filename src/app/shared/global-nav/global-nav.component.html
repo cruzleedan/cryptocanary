@@ -1,4 +1,5 @@
-<div fxLayout="row" fxLayoutAlign="stretch center">
+<div fxLayout="row"
+  fxLayoutAlign="stretch center">
   <!-- <button mat-button [matMenuTriggerFor]="productsMenu" >Products</button>
   <mat-menu #productsMenu="matMenu" yPosition="below" [overlapTrigger]="false">
     <button mat-menu-item>Settings</button>
@@ -11,7 +12,22 @@
   </mat-menu>
   <button mat-button>News</button>
   <button mat-button>About</button> -->
-  <a mat-raised-button color="warn" [routerLink]="['/entity/new']" >
+  <a mat-raised-button
+    class="add-project"
+    color="warn"
+    [routerLink]="['/entity/new']">
     Add Project
   </a>
+  <button *ngIf="isAdmin"
+    class="full-height"
+    mat-button
+    [matMenuTriggerFor]="manageMenu">Manage</button>
+  <mat-menu #manageMenu="matMenu"
+    yPosition="below"
+    [overlapTrigger]="false">
+    <button mat-menu-item
+      [routerLink]="['/admin/users']">Users</button>
+    <button mat-menu-item
+      [routerLink]="['/home']">Entities</button>
+  </mat-menu>
 </div>

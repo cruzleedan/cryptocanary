@@ -10,9 +10,9 @@ export class RatingLabelPipe implements PipeTransform {
             return '0';
         }
         rating = parseFloat(rating);
-        const indx = Math.round(rating) - 1;
+        const indx = Math.round(rating);
         const labels = ['Not Shady At All', 'Slightly Shady', 'Shady', 'Very Shady', 'Super Shady'];
-        return indx >= 0 ? labels[indx] : '';
+        return indx >= 0 && indx < labels.length ? labels[indx] : '';
     }
 
 }

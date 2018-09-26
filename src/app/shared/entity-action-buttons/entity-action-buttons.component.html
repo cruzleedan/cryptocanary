@@ -1,0 +1,37 @@
+<ng-container *ngIf="!menu">
+  <mat-slide-toggle aria-label="approved"
+    *ngIf="!entity.approved"
+    [checked]="entity.approved"
+    color="primary"
+    (change)="approveChange($event)">{{ entity.approved ? 'Approved' : 'Pending' }}</mat-slide-toggle>
+  <a mat-icon-button
+    *ngIf="(currentUser && entity.userId === currentUser.id) || isAdmin"
+    [routerLink]="['/entity/'+entity.id+'/edit']">
+    <mat-icon>edit</mat-icon>
+  </a>
+  <button mat-icon-button
+    color="warn"
+    *ngIf="isAdmin"
+    (click)="delete()">
+    <mat-icon>delete_outline</mat-icon>
+  </button>
+</ng-container>
+<ng-container *ngIf="menu">
+  <button mat-icon-button
+    *ngIf="(currentUser && entity.userId === currentUser.id) || isAdmin"
+    [matMenuTriggerFor]="entityMenu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+  <mat-menu #entityMenu="matMenu">
+    <a mat-menu-item
+      *ngIf="(currentUser && entity.userId === currentUser.id) || isAdmin"
+      [routerLink]="['/entity/'+entity.id+'/edit']">Edit
+    </a>
+    <button mat-menu-item
+      color="warn"
+      *ngIf="isAdmin"
+      (click)="delete()">
+      Delete
+    </button>
+  </mat-menu>
+</ng-container>

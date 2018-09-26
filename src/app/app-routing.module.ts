@@ -11,6 +11,10 @@ const routes: Routes = [
     path: 'auth',
     loadChildren: './modules/auth/auth.module#AuthModule',
     canActivate: [NoAuthGuard]
+  },
+  {
+    path: 'admin',
+    loadChildren: './modules/admin/admin.module#AdminModule',
   }
 ];
 

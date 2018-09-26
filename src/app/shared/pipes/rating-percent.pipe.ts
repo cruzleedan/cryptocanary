@@ -9,16 +9,16 @@ export class RatingPercentPipe implements PipeTransform {
   transform(entity: Entity, args?: any): any {
     let overallRating: string | number = 'Not Rated';
     if (entity.rating && entity.reviewCount) {
-      overallRating = (entity.rating / 5) * 100;
+      overallRating = (entity.rating / 4) * 100;
       overallRating = Math.round(overallRating * 100) / 100;
       return overallRating + '%';
     }
-    const maxRating = 5,
-      superShady = 5 / maxRating,
-      veryShady = 4 / maxRating,
-      shady = 3 / maxRating,
-      slightlyShady = 2 / maxRating,
-      notShadyAtAll = 1 / maxRating;
+    const maxRating = 4,
+      superShady = 4 / maxRating,
+      veryShady = 3 / maxRating,
+      shady = 2 / maxRating,
+      slightlyShady = 1 / maxRating,
+      notShadyAtAll = 0 / maxRating;
 
     let superShadyCount = entity.superShady || 0,
       veryShadyCount = entity.veryShady || 0,
@@ -33,19 +33,19 @@ export class RatingPercentPipe implements PipeTransform {
       console.log('Will count reviews ');
       entity.Reviews.forEach(review => {
         switch (+review.rating) {
-          case 5:
+          case 4:
             superShadyCount++;
             break;
-          case 4:
+          case 3:
             veryShadyCount++;
             break;
-          case 3:
+          case 2:
             shadyCount++;
             break;
-          case 2:
+          case 1:
             slightlyShadyCount++;
             break;
-          case 1:
+          case 0:
             notShadyAtAllCount++;
             break;
         }

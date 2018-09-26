@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { V1Component } from './v1/v1.component';
+import { TemplateV1Component } from './pages/v1/template-v1.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: V1Component,
+    component: TemplateV1Component,
     children: [
       {
         path: '',

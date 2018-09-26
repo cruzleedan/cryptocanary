@@ -1,33 +1,46 @@
-<a [routerLink]="['/entity/' + entity.id]"
-  *ngFor="let entity of data">
-  <mat-card fxLayout="row"
-    fxLayoutGap="20px"
-    fxLayoutAlign="stretch center"
-    class="entity-item">
-    <div class="icon-cont">
-      <img [src]="baseUrl+'/entity/'+entity.id+'/'+entity.image"
-        onerror="this.onerror=null;this.src='assets/images/entities/default.png';"
-        alt="icon"
-        class="icon">
-    </div>
-    <div class="name"
-      fxFlex
-      fxLayout="row"
-      fxLayoutGap="10px"
-      fxLayoutAlign="stretch center">
-      <span class="name-label">{{ entity.name }}</span>
+<ng-container *ngFor="let entity of data">
+  <div fxLayout="row"
+    fxLayoutAlign="stretch center">
+    <a [routerLink]="['/entity/' + entity.id]"
+      fxFlex>
+      <mat-card fxLayout="row"
+        fxLayoutGap="20px"
+        fxLayoutAlign="stretch center"
+        class="entity-item">
+        <div class="icon-cont">
+          <img [src]="baseUrl+'/entity/'+entity.id+'/'+entity.image"
+            onerror="this.onerror=null;this.src='assets/images/entities/default.png';"
+            alt="icon"
+            class="icon">
+        </div>
+        <div class="name"
+          fxFlex
+          fxLayout="row"
+          fxLayoutGap="10px"
+          fxLayoutAlign="stretch center">
+          <span class="name-label">{{ entity.name }}</span>
 
-      <!-- <div fxFlexAlign="flex-end">
-        <mat-icon class="align-center"
-        fontSet="fa"
-          fontIcon="fa-calendar">
-        </mat-icon>
-        <span>
-          {{ entity.createdAt | dateTimeMomentFormat:'YYYY-MM-DD HH:mm:ss'}}
-        </span>
-      </div> -->
-    </div>
-    <div class="rating rating-{{ entity.reviewCount ? (entity.rating | ratingLabel | replaceSpaces): '' }}">{{ entity | ratingPercent }} {{
-      entity.reviewCount ? (entity.rating | ratingLabel): '' }}</div>
-  </mat-card>
-</a>
+          <!-- <div fxFlexAlign="flex-end">
+            <mat-icon class="align-center"
+            fontSet="fa"
+              fontIcon="fa-calendar">
+            </mat-icon>
+            <span>
+              {{ entity.createdAt | dateTimeMomentFormat:'YYYY-MM-DD HH:mm:ss'}}
+            </span>
+          </div> -->
+        </div>
+        <div class="rating rating-{{ entity.reviewCount ? (entity.rating | ratingLabel | replaceSpaces): '' }}">{{
+          entity | ratingPercent }} {{
+          entity.reviewCount ? (entity.rating | ratingLabel): '' }}</div>
+      </mat-card>
+    </a>
+    <app-entity-action-buttons fxLayout="row"
+      fxLayoutAlign="end"
+      [menu]="!isAdmin"
+      [entity]="entity"
+      (afterDelete)="afterEntityDelete($event)"
+      (afterApprove)="afterEntityApprove($event)">
+    </app-entity-action-buttons>
+  </div>
+</ng-container>

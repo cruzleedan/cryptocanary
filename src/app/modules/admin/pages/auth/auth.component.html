@@ -1,0 +1,105 @@
+<app-container>
+  <h2 class="form-title">{{ title }}</h2>
+  <div *ngIf="isLogin">
+    <div fxLayout="column"
+      class="social-login-container">
+      <button mat-raised-button
+        type="button"
+        class="fb-button"
+        alt="Login with Facebook"
+        (click)="signInWithFB()">
+        CONTINUE VIA FACEBOOK
+      </button>
+      <!-- <button mat-raised-button type="button" color="accent" alt="Login with Google">Login with Google</button> -->
+    </div>
+    <div fxLayout="row"
+      class="divider">
+      <mat-divider fxFlex></mat-divider>
+      <span>OR</span>
+      <mat-divider fxFlex></mat-divider>
+    </div>
+  </div>
+  <form [formGroup]="authForm"
+    (ngSubmit)="submitForm()"
+    fxLayout="column">
+    <mat-form-field *ngIf="isRegister">
+      <mat-icon matPrefix>email</mat-icon>
+      <input matInput
+        placeholder="Email"
+        formControlName="email"
+        [errorStateMatcher]="matcher">
+      <mat-error *ngIf="authForm.get('email').hasError('email') && !authForm.get('email').hasError('required')">
+        Please enter a valid email address
+      </mat-error>
+      <mat-error *ngIf="authForm.get('email').hasError('required')">
+        Email is
+        <strong>required</strong>
+      </mat-error>
+      <mat-error *ngIf="authForm.get('email').hasError('server')"> {{ authForm.get('email').getError('server') }}</mat-error>
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <mat-icon matPrefix>person_outline</mat-icon>
+      <input matInput
+        placeholder="Username"
+        formControlName="username"
+        [errorStateMatcher]="matcher">
+      <mat-error *ngIf="authForm.get('username').hasError('required')">
+        Username is
+        <strong>required</strong>
+      </mat-error>
+      <mat-error *ngIf="authForm.get('username').hasError('server')"> {{ authForm.get('username').getError('server') }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="isLogin">
+      <mat-icon matPrefix>lock</mat-icon>
+      <input matInput
+        placeholder="Password"
+        formControlName="password"
+        type="password">
+      <mat-error *ngIf="authForm.get('password').hasError('required')">
+        Password is
+        <strong>required</strong>
+      </mat-error>
+      <mat-error *ngIf="authForm.get('password').hasError('server')"> {{ authForm.get('password').getError('server') }}</mat-error>
+    </mat-form-field>
+
+    <app-matched-password *ngIf="isRegister"
+      [form]="authForm"></app-matched-password>
+
+    <div fxLayout="column">
+      <a class="link"
+        fxFlexAlign="end"
+        *ngIf="isLogin"
+        [routerLink]="['/auth/forgot-password-reset']">Forgot your password?</a>
+      <!-- <div *ngIf="isRegister"
+        class="pp-container">
+        By registering, I have read and accepted the
+        <a href="https://www.freeprivacypolicy.com/privacy/view/a75e65c92db5695d75aca23fe3c6f8d9"
+          target="_blank">Privacy Policy</a>
+      </div> -->
+      <mat-error *ngIf="authError">
+        {{ authError | capitalize }}
+      </mat-error>
+      <button fxFlexAlign="center"
+        mat-raised-button
+        type="submit"
+        color="primary"
+        alt="submit"
+        [disabled]="!authForm.valid || loading">
+        {{ title }}
+      </button>
+      <!-- <span class="link"
+        fxFlexAlign="end"
+        *ngIf="isLogin">
+        Not a user?
+        <a [routerLink]="['/auth/register']">Sign up</a>
+      </span>
+      <span class="link"
+        fxFlexAlign="end"
+        *ngIf="isRegister">
+        Already have an account.
+        <a [routerLink]="['/auth/login']">Sign in</a>
+      </span> -->
+    </div>
+  </form>
+</app-container>

@@ -1,5 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { environment } from '../../../environments/environment';
+import { UserService, User } from '../../core';
+import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { Entity } from '../../core/models/entity.model';
 
 @Component({
   selector: 'app-entity-card-overview',
@@ -8,11 +12,31 @@ import { environment } from '../../../environments/environment';
 })
 export class EntityCardOverviewComponent implements OnInit {
   baseUrl = environment.baseUrl;
+  isAdmin: boolean;
   @Input() data: any[];
-
-  constructor() { }
+  constructor(
+    private router: Router,
+    private userService: UserService
+  ) {
+    this.userService.isAdmin$.subscribe(isAdmin => {
+      this.isAdmin = isAdmin;
+    });
+  }
 
   ngOnInit() {
   }
-
+  afterEntityDelete(entity: Entity) {
+    if (entity && entity.id) {
+      this.data = this.data.filter(item => {
+        return item.id !== entity.id;
+      });
+    }
+  }
+  afterEntityApprove(entity: Entity) {
+    if (entity.approved) {
+      this.data = this.data.filter(item => {
+        return item.id !== entity.id;
+      });
+    }
+  }
 }

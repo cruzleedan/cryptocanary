@@ -31,8 +31,11 @@
         <span class="review-count">({{ entity.reviewCount }} {{ entity.reviewCount > 1 ? 'Reviews': 'Review' }})</span>
         <span fxFlex></span>
         <span class="published-date">{{ entity.createdAt | date}}</span>
+        <app-entity-action-buttons [entity]="entity" [menu]="true" (afterDelete)="afterEntityDeleted()"></app-entity-action-buttons>
       </div>
-      <div class="published-by">Added by: {{ entity.User ? entity.User.username : '' }}</div>
+      <ng-container *ngIf="entity.User && entity.User.id">
+        <div class="published-by">Added by: <a [routerLink]="['/user/'+entity.User.id]" >{{ entity.User ? entity.User.username : '' }}</a></div>
+      </ng-container>
       <div class="write-review-cont">
         <button mat-raised-button
           (click)="openAddReviewDialog()"

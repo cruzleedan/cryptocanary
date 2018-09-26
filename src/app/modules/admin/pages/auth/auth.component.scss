@@ -1,0 +1,9 @@
+::ng-deep {
+  app-matched-password {
+      width: 100%;
+      display: block;
+      mat-form-field {
+          width: 100%;
+      }
+  }
+}

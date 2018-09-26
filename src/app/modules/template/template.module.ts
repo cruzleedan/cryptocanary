@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 
 import { TemplateRoutingModule } from './template-routing.module';
-import { V1Component } from './v1/v1.component';
 import { SharedModule } from '../../shared/shared.module';
+import { TemplateV1Component } from './pages/v1/template-v1.component';
 
 @NgModule({
   imports: [
@@ -10,6 +10,6 @@ import { SharedModule } from '../../shared/shared.module';
     TemplateRoutingModule
   ],
   exports: [],
-  declarations: [V1Component, ]
+  declarations: [TemplateV1Component]
 })
 export class TemplateModule { }

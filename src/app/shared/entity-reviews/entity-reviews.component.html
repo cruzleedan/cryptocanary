@@ -3,13 +3,14 @@
     fxLayout="row wrap"
     fxLayoutGap="10px"
     *ngFor="let review of entityReviews">
-    <div class="avatar-cont"
+    <a [routerLink]="['/user/'+review.User.id]"
+      class="avatar-cont"
       fxFlex="1 1 3em">
       <img [src]="baseUrl+'/avatar/'+review.User.id+'/'+review.User.avatar"
         onerror="this.onerror=null;this.src='/assets/images/avatars/default.png'"
         alt="user"
         class="icon">
-    </div>
+    </a>
     <div class="content"
       fxFlex>
       <div class="header"

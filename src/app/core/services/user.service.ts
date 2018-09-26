@@ -427,13 +427,16 @@ export class UserService {
   }
   ): Observable<Entity[]> {
     console.log('findUserEntities');
-    params = Object.assign({
+    const defaults = {
       filter: '',
       sortDirection: 'desc',
       sortField: 'rating',
-      pageNumber: 1,
+      pageNumber: 0,
       pageSize: 10
-    }, params);
+    };
+    Object.keys(defaults).forEach(key => {
+      params[key] = params[key] || defaults[key];
+    });
     params.userId = params.userId || '';
     this.global.setLoadingRequests('findUserEntities', true);
     return this.apiService.get(
@@ -473,14 +476,16 @@ export class UserService {
     userId?: string
   }
   ): Observable<Review[]> {
-    console.log('findUserReviews');
-    params = Object.assign({
+    const defaults = {
       filter: '',
       sortDirection: 'desc',
       sortField: 'rating',
-      pageNumber: 1,
+      pageNumber: 0,
       pageSize: 10
-    }, params);
+    };
+    Object.keys(defaults).forEach(key => {
+      params[key] = params[key] || defaults[key];
+    });
     params.userId = params.userId || '';
     this.global.setLoadingRequests('findUserReviews', true);
     return this.apiService.get(
@@ -531,16 +536,22 @@ export class UserService {
     userId?: string
   }
   ): Observable<any[]> {
-    params = Object.assign({
+    const defaults = {
       filter: '',
       sortDirection: 'desc',
       sortField: 'createdAt',
-      pageNumber: 1,
+      pageNumber: 0,
       pageSize: 10
-    }, params);
+    };
+    Object.keys(defaults).forEach(key => {
+      params[key] = params[key] || defaults[key];
+    });
+
     this.global.setLoadingRequests('findUserActivity', true);
+    const route = `/user/${params.userId ? params.userId + '/' : ''}activity`;
+    console.log('FIND ACTIVITY ROUTE', route);
     return this.apiService.get(
-      `/user/activity`,
+      route,
       new HttpParams()
         .set('filter', params.filter)
         .set('sortDirection', params.sortDirection)
@@ -675,7 +686,7 @@ export class UserService {
     const keywords: Observable<string> = Obj['keyword'],
       sortField = Obj['sortField'],
       sortDirection = Obj['sortDirection'],
-      pageNum = Obj['pageNum'],
+      pageNumber = Obj['pageNum'],
       pageSize = Obj['pageSize'];
     this.global.setLoadingRequests('search', true);
     return keywords.pipe(
@@ -687,31 +698,47 @@ export class UserService {
           return of([]);
         }
         return this.findUsers(
-          keyword,
-          null,
-          sortDirection,
-          sortField,
-          pageNum,
-          pageSize
+          {
+            filter: keyword,
+            sortDirection,
+            sortField,
+            pageNumber,
+            pageSize
+          }
         );
       })
     );
   }
 
-  findUsers(
-    filter: string = '', filterFields: object = [], sortDirection = 'asc', sortField = 'username',
-    pageNumber = 0, pageSize = 25
-  ): Observable<User[]> {
+  findUsers(params: {
+    filter: string,
+    filterFields?: object,
+    sortDirection: string,
+    sortField: string,
+    pageNumber: number,
+    pageSize: number
+  }): Observable<User[]> {
+    const defaults = {
+      filter: '',
+      filterFields: [],
+      sortDirection: 'asc',
+      sortField: 'username',
+      pageNumber: 0,
+      pageSize: 10
+    };
+    Object.keys(defaults).forEach(key => {
+      params[key] = params[key] || defaults[key];
+    });
     this.global.setLoadingRequests('findUsers', true);
     return this.apiService.get(
       '/users',
       new HttpParams()
-        .set('filter', filter)
-        .set('filterFields', JSON.stringify(filterFields))
-        .set('sortDirection', sortDirection)
-        .set('sortField', sortField)
-        .set('pageNumber', pageNumber.toString())
-        .set('pageSize', pageSize.toString())
+        .set('filter', params.filter)
+        .set('filterFields', JSON.stringify(params.filterFields))
+        .set('sortDirection', params.sortDirection)
+        .set('sortField', params.sortField)
+        .set('pageNumber', params.pageNumber ? params.pageNumber.toString() : '')
+        .set('pageSize', params.pageSize ? params.pageSize.toString() : '')
     ).pipe(
       map((res) => {
         if (!res.success) {

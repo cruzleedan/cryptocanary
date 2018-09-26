@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { UserService } from '../../core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { UserService, User } from '../../core';
 import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -14,10 +14,11 @@ import { Router } from '@angular/router';
   styleUrls: ['./user-activities.component.scss']
 })
 export class UserActivitiesComponent implements OnInit, OnDestroy {
+  isCurrentUser: boolean;
   searchControl: FormControl;
   pageSize: number;
   pageNumber: number;
-  userId: string;
+  @Input() user: User;
   userActivities = {};
   dates = [];
   format = 'YYYY-MM-DD';
@@ -30,6 +31,9 @@ export class UserActivitiesComponent implements OnInit, OnDestroy {
     this.searchControl = new FormControl('');
     this.pageNumber = 0;
     this.pageSize = 10;
+    this.userService.currentUser$.subscribe(user => {
+      this.isCurrentUser = this.user.id === user.id;
+    });
   }
 
   ngOnInit() {
@@ -43,6 +47,7 @@ export class UserActivitiesComponent implements OnInit, OnDestroy {
     sort: string = 'desc',
     sortField: string = 'createdAt'
   ) {
+    console.log('LOAD USER ACTIVITY');
     this.userService.findUserActivity(
       {
         filter: this.searchControl.value,
@@ -50,7 +55,7 @@ export class UserActivitiesComponent implements OnInit, OnDestroy {
         sortField,
         pageNumber: this.pageNumber,
         pageSize: this.pageSize,
-        userId: this.userId
+        userId: this.user.id
       })
       .pipe(takeUntil(this.destroySubject$))
       .subscribe(resp => {

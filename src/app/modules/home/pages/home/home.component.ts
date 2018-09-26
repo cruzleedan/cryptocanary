@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MatTabChangeEvent } from '@angular/material';
-import { EntityService } from '../../../../core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
+import { MatTabChangeEvent, PageEvent, MatPaginator, MatTab, MatTabGroup } from '@angular/material';
+import { EntityService, UserService } from '../../../../core';
 import { Subject } from 'rxjs';
-import { takeUntil, debounceTime } from 'rxjs/operators';
+import { takeUntil, debounceTime, tap } from 'rxjs/operators';
 import { GlobalService } from '../../../../core/services/global.service';
 
 @Component({
@@ -10,50 +10,176 @@ import { GlobalService } from '../../../../core/services/global.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   entities = [];
   loading: boolean;
+  isAdmin: boolean;
   destroySubject$: Subject<void> = new Subject();
+
+  length: number;
+  pageSize: number;
+  pageIndex: number;
+  pageSizeOptions: any;
+
+  pendingLength: number;
+  newProjectLength: number;
+  shadiestProjectLength: number;
+
+  pendingPageSize: number;
+  newProjectPageSize: number;
+  shadiestProjectPageSize: number;
+
+  pendingPageIndex: number;
+  newProjectPageIndex: number;
+  shadiestProjectPageIndex: number;
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatTabGroup) entityTabGroup: MatTabGroup;
   constructor(
     private entityService: EntityService,
-    private globalService: GlobalService
+    private globalService: GlobalService,
+    private userService: UserService
   ) {
+    this.length = 10;
+    this.pageSize = 10;
+    this.pageIndex = 0;
+    this.pageSizeOptions = [10, 25, 50, 100];
+
+    this.pendingPageSize = 10;
+    this.newProjectPageSize = 10;
+    this.shadiestProjectPageSize = 10;
+
+    this.pendingPageIndex = 0;
+    this.newProjectPageIndex = 0;
+    this.shadiestProjectPageIndex = 0;
+
     this.globalService.loadingRequests$
-    .subscribe((requests) => {
-      this.loading = !!(requests['getEntities']);
+      .subscribe((requests) => {
+        this.loading = !!(requests['getEntities']);
+      });
+    this.userService.isAdmin$.subscribe(isAdmin => {
+      this.isAdmin = isAdmin;
     });
   }
 
   ngOnInit() {
-    this.getEntities([['createdAt', 'desc']]); // default will be new projects
+    let filter = {};
+    if (this.isAdmin) {
+      filter = { approved: false }; // default to pending tab if user is admin
+    }
+    this.getEntities({
+      field: [['createdAt', 'desc']],
+      filter
+    }, (resp) => {
+      this.pendingLength = resp['count'] || 0;
+    });
+  }
+  ngAfterViewInit() {
+
+    this.paginator.page
+      .pipe(
+        tap(() => {
+          // this.getPendingEntities();
+          const activeTab = this.entityTabGroup.selectedIndex;
+          switch (activeTab) {
+            case 0:
+              this.getPendingEntities();
+              break;
+            case 1:
+              this.getNewEntities();
+              break;
+            case 2:
+              this.getShadiestEntities();
+              break;
+          }
+        }),
+        takeUntil(this.destroySubject$)
+      )
+      .subscribe();
   }
   ngOnDestroy() {
     this.destroySubject$.next();
     this.destroySubject$.complete();
   }
-  getEntities(field: Object) {
-    this.entityService.getEntities({
-      field: field,
-      pageNumber: '0',
-      pageSize: '10'
-    })
+  getEntities(params, cb?: Function) {
+    params = Object.assign({
+      field: params.field,
+      filter: params.filter,
+      pageNumber: 0,
+      pageSize: 10
+    }, params);
+    this.entityService.getEntities(params)
       .pipe(
         debounceTime(400),
         takeUntil(this.destroySubject$)
       )
-      .subscribe(entities => {
-        this.entities = entities;
+      .subscribe(resp => {
+        this.entities = resp['data'];
+        if (cb && typeof cb === 'function') {
+          cb(resp);
+        }
       });
   }
+  getPendingEntities() {
+    this.getEntities({
+      field: [['createdAt', 'desc']],
+      filter: { approved: false },
+      pageNumber: this.paginator.pageIndex,
+      pageSize: this.paginator.pageSize
+    }, (resp) => {
+      this.pendingLength = resp['count'] || 0;
+      this.length = this.pendingLength;
+      this.pendingPageSize = this.paginator.pageSize;
+      this.pendingPageIndex = this.paginator.pageIndex;
+    });
+  }
+  getNewEntities() {
+    this.getEntities({
+      field: [['createdAt', 'desc']],
+      pageNumber: this.paginator.pageIndex,
+      pageSize: this.paginator.pageSize
+    }, (resp) => {
+      this.newProjectLength = resp['count'] || 0;
+      this.length = this.newProjectLength;
+      this.newProjectPageSize = this.paginator.pageSize;
+      this.newProjectPageIndex = this.paginator.pageIndex;
+    });
+  }
+  getShadiestEntities() {
+    this.getEntities({
+      field: [['rating', 'desc']],
+      pageNumber: this.paginator.pageIndex,
+      pageSize: this.paginator.pageSize
+    }, (resp) => {
+      this.shadiestProjectLength = resp['count'] || 0;
+      this.length = this.shadiestProjectLength;
+      this.shadiestProjectPageSize = this.paginator.pageSize;
+      this.shadiestProjectPageIndex = this.paginator.pageIndex;
+    });
+  }
   selectedTabChange(event: MatTabChangeEvent) {
+    console.log('selected tab changed');
     this.entities = [];
     const tab = event.tab.textLabel;
     if (tab === 'SHADIEST PROJECTS') {
+      this.paginator.pageSize = this.shadiestProjectPageSize;
+      this.paginator.pageIndex = this.shadiestProjectPageIndex;
       // sort entities by shadiest to least shady
-      this.getEntities([['rating', 'desc']]);
+      this.getShadiestEntities();
     } else if (tab === 'NEW PROJECTS') {
+      console.log('Initialize page size to ', this.newProjectPageSize);
+      console.log('Initialize page index to ', this.newProjectPageIndex);
+      this.paginator.pageSize = this.newProjectPageSize;
+      this.paginator.pageIndex = this.newProjectPageIndex;
       // sort entities by latest to oldest
-      this.getEntities([['createdAt', 'desc']]);
+      this.getNewEntities();
+    } else if (tab === 'PENDING PROJECTS') {
+      console.log('Initialize page size to ', this.pendingPageSize);
+      console.log('Initialize page index to ', this.pendingPageIndex);
+      this.paginator.pageSize = this.pendingPageSize;
+      this.paginator.pageIndex = this.pendingPageIndex;
+      // get pending entities
+      this.getPendingEntities();
     }
   }
 }

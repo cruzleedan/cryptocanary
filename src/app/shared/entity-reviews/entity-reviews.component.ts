@@ -48,8 +48,11 @@ export class EntityReviewsComponent implements OnInit, OnDestroy {
     this.entityId$
       .subscribe(entityId => {
         this.entityId = entityId;
+        this.entityReviews = [];
+        this.entityTotalReviews = 0;
+        this.pageNumber = 0;
+        this.loadReviews();
       });
-    this.loadReviews();
   }
   ngOnDestroy() {
     this.destroySubject$.next();

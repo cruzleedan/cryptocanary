@@ -81,6 +81,8 @@ import { LoadingComponent } from './loading/loading.component';
 import { CustomBlob } from './helpers/custom-blob';
 import { UserActivitiesComponent } from './user-activities/user-activities.component';
 import { MapToIterablePipe } from './pipes/map-to-iterable.pipe';
+import { EntityActionButtonsComponent } from './entity-action-buttons/entity-action-buttons.component';
+import { V1Component } from './template/v1/v1.component';
 
 @NgModule({
   imports: [
@@ -156,7 +158,9 @@ import { MapToIterablePipe } from './pipes/map-to-iterable.pipe';
     EntityReviewsComponent,
     AddReviewDialogComponent,
     LoadingComponent,
-    UserActivitiesComponent
+    UserActivitiesComponent,
+    EntityActionButtonsComponent,
+    V1Component
   ],
   exports: [
     CommonModule,
@@ -228,7 +232,9 @@ import { MapToIterablePipe } from './pipes/map-to-iterable.pipe';
     EntityReviewsComponent,
     AddReviewDialogComponent,
     LoadingComponent,
-    UserActivitiesComponent
+    UserActivitiesComponent,
+    EntityActionButtonsComponent,
+    V1Component
   ],
   providers: [
     { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },

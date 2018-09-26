@@ -19,6 +19,7 @@ export class UserComponent implements OnInit, OnDestroy {
   baseUrl = environment.baseUrl;
   currentPage: Breadcrumb;
   user: User;
+  isCurrentUser: boolean;
   editUsername: boolean;
   loading: boolean;
   usernameForm: FormGroup;
@@ -40,10 +41,11 @@ export class UserComponent implements OnInit, OnDestroy {
     private customBlob: CustomBlob,
     private globalService: GlobalService
   ) {
+    this.user = this.route.snapshot.data['user'];
     this.globalService.loadingRequests$
-    .subscribe((requests) => {
-      this.loading = !!(requests['findUserActivity']);
-    });
+      .subscribe((requests) => {
+        this.loading = !!(requests['findUserActivity']);
+      });
     this.usernameForm = new FormGroup({
       username: new FormControl('', [
         Validators.required,
@@ -53,16 +55,21 @@ export class UserComponent implements OnInit, OnDestroy {
 
     this.editUsername = false;
     this.userService.currentUser$.subscribe(user => {
-      this.user = user;
-      this.userAvatarUrl = `${ this.baseUrl }/avatar/${ user.id }/${ user.avatar }`;
-      this.usernameForm.get('username').setValue(user.username);
-      this.currentPage = {
-        href: '',
-        label: user.username
-      };
+      if (!this.user || !Object.keys(this.user).length) {
+        this.user = user;
+      }
+      this.isCurrentUser = this.user.id === user.id;
+      this.patchForm();
     });
   }
-
+  patchForm() {
+    this.userAvatarUrl = `${this.baseUrl}/avatar/${this.user.id}/${this.user.avatar}`;
+    this.usernameForm.get('username').setValue(this.user.username);
+    this.currentPage = {
+      href: '',
+      label: this.user.username
+    };
+  }
   ngOnInit() {
     const usernameCtrl = this.usernameForm.controls['username'];
     usernameCtrl.valueChanges.pipe(

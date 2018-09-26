@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MediaChange, ObservableMedia } from '@angular/flex-layout';
+import { ObservableMedia, MediaChange } from '@angular/flex-layout';
 
 @Component({
   selector: 'app-v1',

@@ -1,16 +1,24 @@
-<mat-progress-bar
-  *ngIf="loading"
+<mat-progress-bar *ngIf="loading"
   mode="indeterminate"
   color="primary"
-  class="absolute-position-important abs-topmost"
-></mat-progress-bar>
+  class="absolute-position-important abs-topmost"></mat-progress-bar>
 <app-page-layout>
   <section class="home"
     fxLayout="row"
     fxLayoutAlign="center">
     <mat-tab-group fxFlex
+      #entityTabGroup
       mat-stretch-tabs
       (selectedTabChange)="selectedTabChange($event)">
+      <mat-tab label="PENDING PROJECTS"
+        *ngIf="isAdmin">
+        <section>
+          <app-entity-card-overview [data]="entities"
+            fxLayout="column"
+            fxLayoutGap="10px">
+          </app-entity-card-overview>
+        </section>
+      </mat-tab>
       <mat-tab label="NEW PROJECTS">
         <section>
           <app-entity-card-overview [data]="entities"
@@ -29,5 +37,13 @@
         </section>
       </mat-tab>
     </mat-tab-group>
+  </section>
+  <section fxLayout="row" fxLayoutAlign="center">
+    <mat-paginator #paginator
+      [length]="length"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="pageSizeOptions">
+    </mat-paginator>
   </section>
 </app-page-layout>

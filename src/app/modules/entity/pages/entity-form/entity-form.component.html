@@ -19,12 +19,13 @@
           <div class="logo-upload"
             fxLayout="column">
             <div class="img-cont">
-              <mat-icon fontSet="fa"
-                fontIcon="fa-camera"
+              <mat-icon
                 (click)="entityImgFile.click()">
+                camera_alt
               </mat-icon>
               <img [src]="croppedImage || entityImgUrl"
                 *ngIf="croppedImage || entityImgUrl"
+                appCheckImage
                 onerror="this.onerror=null;this.src='/assets/images/default.png';">
             </div>
             <mat-progress-bar mode="determinate"
@@ -32,6 +33,7 @@
               [value]="(uploadProgress | async)"
               color="warn">
             </mat-progress-bar>
+            <mat-error *ngIf="croppedImageError">{{ croppedImageError }}</mat-error>
           </div>
           <!-- Logo upload ends  -->
         </div>
@@ -89,6 +91,8 @@
           </div>
           <editor [apiKey]="tinyMceApiKey"
             formControlName="desc"
+            (onBlur)="onEditorBlur()"
+            (onFocus)="onEditorFocus()"
             [init]="tinyMceInit">
           </editor>
         </div>

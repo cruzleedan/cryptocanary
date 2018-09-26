@@ -198,26 +198,31 @@ export class EntityService {
   }
   getEntities(params: {
     field: Object,
-    pageNumber: string,
-    pageSize: string
+    filter?: Object,
+    pageNumber: number,
+    pageSize: number
   }): Observable<Entity[]> {
     params = Object.assign({
+      filter: {},
       pageNumber: '0', // default pageNumber
       pageSize: '10' // default pageSize
     }, params);
+    params.filter = typeof params.filter === 'object' ? params.filter : {approved: true};
+    params.field = typeof params.field === 'object' ? params.field : [['createdAt', 'desc']];
     this.globalService.setLoadingRequests('getEntities', true);
     return this.apiService.get(`/home/entities`,
       new HttpParams()
         .set('field', JSON.stringify(params.field))
-        .set('pageSize', params.pageSize)
-        .set('pageNumber', params.pageNumber)
+        .set('filter', JSON.stringify(params.filter))
+        .set('pageSize', params.pageSize ? params.pageSize.toString() : '')
+        .set('pageNumber', params.pageNumber ? params.pageNumber.toString() : '')
     ).pipe(
       map(res => {
         if (!res.success) {
           this.alertifyService.error(this.errorUtil.getError(res) || 'Something went wrong while retrieving Entities');
           return of([]);
         }
-        return res.data;
+        return res;
       }),
       shareReplay(),
       finalize(() => {

@@ -1,0 +1,172 @@
+<app-v1 class="users-page">
+  <mat-progress-bar *ngIf="loading"
+    mode="indeterminate"
+    color="primary"
+    class="absolute-position-important abs-topmost">
+  </mat-progress-bar>
+  <app-page-layout>
+    <app-breadcrumbs></app-breadcrumbs>
+    <div fxLayout="column"
+      class="components-container-gt-xs"
+      [ngClass.xs]="'components-container-xs'"
+      fxLayoutGap="20px">
+
+      <div fxFlex
+        class="table-component-holder mat-elevation-z4">
+        <mat-toolbar class="table-header"
+          fxLayout="row">
+          <h1>Users</h1>
+          <span fxFlex></span>
+          <a [routerLink]="['/admin/users/new']"
+            mat-raised-button
+            color="primary">
+            Add User
+          </a>
+        </mat-toolbar>
+        <div class="table-container">
+          <div class="example-header"
+            style="padding: 0 20px;">
+            <mat-form-field floatPlaceholder="never"
+              style="color: black; width: 100%;">
+              <input matInput
+                #filter
+                placeholder="Filter users"
+                [formControl]="searchFormControl">
+            </mat-form-field>
+          </div>
+          <div fxLayout="row"
+            class="example-header example-selection-header mat-headline center-align "
+            *ngIf="!selection.isEmpty()">
+            {{selection.selected.length}} {{selection.selected.length == 1 ? 'user' : 'users'}} selected
+          </div>
+
+          <mat-table #table
+            [dataSource]="dataSource"
+            matSort
+            style="margin-top: 20px;">
+
+            <!--- Note that these columns can be defined in any order.
+                    The actual rendered columns are set as a property on the row definition" -->
+
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="select">
+              <mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null"
+                  [checked]="isAllSelected()"
+                  [indeterminate]="selection.hasValue() && !isAllSelected()">
+                </mat-checkbox>
+              </mat-header-cell>
+              <mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                  (change)="$event ? selection.toggle(row.id) : null"
+                  [checked]="selection.isSelected(row.id)">
+                </mat-checkbox>
+              </mat-cell>
+            </ng-container>
+
+            <!-- ID Column -->
+            <ng-container matColumnDef="userId">
+              <mat-header-cell *matHeaderCellDef
+                mat-sort-header> ID </mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="avatar">
+              <mat-header-cell *matHeaderCellDef
+                mat-sort-header> Avatar </mat-header-cell>
+              <mat-cell *matCellDef="let row">
+                <a class="avatar-container" [routerLink]="['/user/'+row.id]" matTooltip="View Profile" matTooltipPosition="after">
+                  <img [src]="baseUrl+'/avatar/'+row.id+'/'+row.avatar"
+                    alt="Avatar"
+                    appCheckImage
+                    onerror="this.onerror=null;this.src='/assets/images/avatars/avatar.png'">
+                </a>
+              </mat-cell>
+            </ng-container>
+            <!-- Email Column -->
+            <ng-container matColumnDef="email">
+              <mat-header-cell *matHeaderCellDef
+                mat-sort-header> Email </mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.email}} </mat-cell>
+            </ng-container>
+
+            <!-- UserName Column -->
+            <ng-container matColumnDef="username">
+              <mat-header-cell *matHeaderCellDef
+                mat-sort-header> Username </mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.username}} </mat-cell>
+            </ng-container>
+
+            <!-- First Name Column -->
+            <ng-container matColumnDef="firstname">
+              <mat-header-cell *matHeaderCellDef
+                mat-sort-header> First Name </mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.firstname}} </mat-cell>
+            </ng-container>
+
+            <!-- Last Name Column -->
+            <ng-container matColumnDef="lastname">
+              <mat-header-cell *matHeaderCellDef
+                mat-sort-header> Last Name </mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.lastname}} </mat-cell>
+            </ng-container>
+
+            <!-- Block Flag Column -->
+            <ng-container matColumnDef="blockFlag">
+              <mat-header-cell *matHeaderCellDef> Block </mat-header-cell>
+              <mat-cell *matCellDef="let row"
+                (click)="$event.stopPropagation()">
+                <mat-slide-toggle [checked]="row.blockFlag"
+                  color="warn"
+                  (change)="onBlockToggle($event)"
+                  data-id="{{ row.id }}"></mat-slide-toggle>
+              </mat-cell>
+            </ng-container>
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+              <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+              <mat-cell *matCellDef="let row"
+                (click)="$event.stopPropagation()">
+                <a mat-icon-button
+                  [routerLink]="[row.id+'/edit']"
+                  color="accent">
+                  <mat-icon aria-label="Edit">mode_edit</mat-icon>
+                </a>
+                <button mat-icon-button
+                  color="warn"
+                  (click)="deleteUser(row.id)">
+                  <mat-icon aria-label="Delete">delete</mat-icon>
+                </button>
+                <!-- <button mat-icon-button [matMenuTriggerFor]="menu">
+                                <mat-icon>more_vert</mat-icon>
+                            </button> -->
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"
+              [class.example-selected-row]="selection.isSelected(row.id)"
+              (click)="selection.toggle(row.id)">
+            </mat-row>
+          </mat-table>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>Item 1</button>
+            <button mat-menu-item>Item 2</button>
+          </mat-menu>
+          <div class="example-no-results"
+            [style.display]="dataSource?.renderedData.length == 0 ? '' : 'none'">
+            No users found matching filter.
+          </div>
+
+          <mat-paginator #paginator
+            [length]="dataSource.count"
+            [pageIndex]="0"
+            [pageSize]="10"
+            [pageSizeOptions]="[10, 25, 100]">
+          </mat-paginator>
+        </div>
+      </div>
+    </div>
+  </app-page-layout>
+</app-v1>

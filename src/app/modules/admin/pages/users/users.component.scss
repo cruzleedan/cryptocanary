@@ -1,0 +1,29 @@
+::ng-deep {
+  app-v1.users-page {
+    app-page-layout .page-layout-body{
+      min-width: 1300px;
+    }
+  }
+}
+.table-header {
+	// color: white;
+	padding: 0 5px;
+}
+.table-container {
+    padding: 15px;
+    margin-bottom: 15px;
+}
+.table-component-holder {
+	background-color: white;
+}
+.avatar-container {
+    width: 50px;
+    height: 50px;
+    padding: 5px 0;
+    img {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 50px;
+        box-shadow: inset 0 0 0px 1px #d4d8da;
+    }
+}

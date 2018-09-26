@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { EntityService, Breadcrumb, UserService } from '../../../../core';
 import { Entity } from '../../../../core/models/entity.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil, distinctUntilChanged, shareReplay } from 'rxjs/operators';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
@@ -35,6 +35,7 @@ export class EntityComponent implements OnInit, OnDestroy {
     private entityService: EntityService,
     private userService: UserService,
     private route: ActivatedRoute,
+    private router: Router,
     private domSanitizer: DomSanitizer,
     private dialog: MatDialog,
     private globalService: GlobalService
@@ -58,6 +59,17 @@ export class EntityComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroySubject$.next();
     this.destroySubject$.complete();
+  }
+  getUserReviews() {
+    this.userService.findUserReviews({
+      filter: {entityId: this.entity.id},
+      sortDirection: 'desc',
+      sortField: 'createdAt',
+      pageNumber: 0,
+      pageSize: 10
+    })
+    .pipe(takeUntil(this.destroySubject$))
+    .subscribe();
   }
   getEntity() {
     this.entityService.findEntityById(this.entityIdSubject.getValue())
@@ -92,11 +104,15 @@ export class EntityComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(resp => {
       console.log('The dialog was closed result is ', resp);
       if (resp && typeof resp === 'object') {
-
+        this.getUserReviews();
+        this.getEntity();
         this.entityReviews.pageNumber = 0;
         this.entityReviews.entityReviews = [];
         this.entityReviews.loadReviews();
       }
     });
+  }
+  afterEntityDeleted() {
+    this.router.navigate(['/home']);
   }
 }

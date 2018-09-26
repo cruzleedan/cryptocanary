@@ -20,6 +20,7 @@ import { GlobalService } from '../../../../core/services/global.service';
   styleUrls: ['./entity-form.component.scss']
 })
 export class EntityFormComponent implements OnInit, ComponentCanDeactivate {
+  editorPlacehoder = '<p class="editor-placeholder">Describe basic concept of project</p>';
   tinyMceApiKey = environment.tinyMce.apiKey;
   tinyMceInit = {
     plugins: 'link image',
@@ -27,8 +28,18 @@ export class EntityFormComponent implements OnInit, ComponentCanDeactivate {
     images_upload_handler: this.imgHandler,
     setup: function (editor) {
       editor.on('init', function (e) {
-        console.log('This', this);
-        console.log('Editor was initialized.', e);
+        console.log('this', this);
+        this.iframeElement.contentDocument.querySelectorAll('p.editor-placeholder').forEach(el => {
+          el.style.color = '#989898';
+        });
+      });
+      editor.on('blur', function (e) {
+        console.log('blur', this);
+        setTimeout(() => {
+          this.contentDocument.querySelectorAll('p.editor-placeholder').forEach(el => {
+            el.style.color = '#989898';
+          });
+        }, 50);
       });
     }
   };
@@ -45,6 +56,7 @@ export class EntityFormComponent implements OnInit, ComponentCanDeactivate {
   imgFormControl = new FormControl();
 
   imageChangedEvent: any = '';
+  croppedImageError: string;
   croppedImage: any = '';
   uploadProgress;
   uploadProgressCompleted = false;
@@ -86,8 +98,10 @@ export class EntityFormComponent implements OnInit, ComponentCanDeactivate {
       'email': new FormControl('', [Validators.email]),
       'Category': new FormControl('')
     });
+    this.entityForm.get('desc').setValue(this.editorPlacehoder);
     if (this.route.snapshot.data && this.route.snapshot.data.entity) {
       const loadedEntity = this.route.snapshot.data.entity;
+      this.entity = loadedEntity;
       this.patchEntityForm(loadedEntity);
     } else {
       this.currentPage = {
@@ -186,9 +200,35 @@ export class EntityFormComponent implements OnInit, ComponentCanDeactivate {
     }
     this.entityForm.get('descImages').setValue(JSON.stringify(outp));
   }
+  onEditorBlur() {
+    console.log('onEditorBlur ', this.entityForm.get('desc').value);
+    if (this.entityForm.get('desc').value.trim() === '') {
+      console.log('set desc to empty editor placeholder');
+      this.entityForm.get('desc').setValue(this.editorPlacehoder);
+    }
+  }
+  onEditorFocus() {
+    const desc = this.entityForm.get('desc').value;
+    console.log('onEditorFocus ', this.entityForm.get('desc').value);
+    if (desc === this.editorPlacehoder) {
+      console.log('set desc to empty string');
+      this.entityForm.get('desc').setValue('');
+    }
+  }
+  validateEntityDesc() {
+    if (this.entityForm.get('desc').value === this.editorPlacehoder) {
+      this.entityForm.get('desc').setValue('');
+    }
+  }
+  validateImageFileSize(imageFile) {
+    if (imageFile.size > 4000000) {
+      this.croppedImageError = 'Image must not exceed 4mb';
+    }
+  }
   handleSubmit() {
     this.entityForm.disable();
     this.setEntityDescImages();
+    this.validateEntityDesc();
     const formValues = this.entityForm.value;
     console.log('formValues', formValues);
     let imageFile;
@@ -197,11 +237,13 @@ export class EntityFormComponent implements OnInit, ComponentCanDeactivate {
 
       const blob = this.customBlob.dataURLToBlob(this.croppedImage);
       imageFile = this.customBlob.blobToFile(blob, `entity-${Date.now()}.png`);
+      this.validateImageFileSize(imageFile);
     }
 
     this.uploading = !!(this.croppedImage);
     let req;
     if (this.isEdit) {
+      console.log('ENTITY IS ', this.entity);
       req = this.entityService.editEntity(
         this.entity.id,
         formValues,
@@ -230,11 +272,8 @@ export class EntityFormComponent implements OnInit, ComponentCanDeactivate {
           })
         )
         .subscribe((n) => {
-          console.log('req data', n);
-
           if (n && n.data) {
-            this.entityForm.patchValue(n.data);
-            this.entityForm.markAsPristine();
+            this.patchEntityForm(n.data);
             this.croppedImage = n.image ? `${this.baseUrl}/entity/${n.image}` : this.croppedImage;
             this.dialog.open(DialogComponent, {
               data: {

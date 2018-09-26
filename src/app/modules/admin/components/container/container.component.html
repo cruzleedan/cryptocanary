@@ -1,0 +1,22 @@
+<div class="form-container"
+  fxLayout="column"
+  fxLayoutAlign="center center">
+  <div id="login"
+    class="signin-card">
+    <mat-progress-bar *ngIf="loading"
+      mode="indeterminate"
+      color="primary"></mat-progress-bar>
+    <div class="signin-card-content">
+      <a [routerLink]="['']"
+        matTooltip="Home">
+        <div class="logo-image">
+          <img src="/assets/images/logo/canary-white-1.png"
+            alt="Logo"
+            width="50">
+        </div>
+      </a>
+      <!-- <router-outlet></router-outlet> -->
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>
