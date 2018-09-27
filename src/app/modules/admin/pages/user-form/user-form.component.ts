@@ -1,5 +1,5 @@
 import { Component, OnInit, NgZone, HostListener, ElementRef, ViewChild, Input } from '@angular/core';
-import { take, tap, switchMap, distinctUntilChanged, map, debounceTime } from 'rxjs/operators';
+import { take, tap, switchMap, distinctUntilChanged, map, debounceTime, finalize } from 'rxjs/operators';
 import { ImageCropperDialogComponent } from '../../../../shared/cropper/image-cropper-dialog.component';
 import { FormControl, Validators, FormGroup, FormBuilder, NgForm } from '@angular/forms';
 import { PasswordValidator } from '../../../../core/validators/password.validator';
@@ -97,9 +97,9 @@ export class UserFormComponent implements OnInit {
         label: 'New'
       };
     }
-    // this.globalService.loadingRequests$.subscribe(requests => {
-    //   this.loading = !!(requests[''])
-    // });
+    this.globalService.loadingRequests$.subscribe(requests => {
+      this.loading = !!(requests['addNewEntity']) || !!(requests['editEntity']);
+    });
 
   }
   ngOnInit() {
@@ -139,7 +139,7 @@ export class UserFormComponent implements OnInit {
       this.userAvatarUrl = `${ this.baseUrl }/avatar/${ this.user.id }/${ this.user.avatar }`;
       this.currentPages = [
         {
-          href: '',
+          href: `/user/${ this.user.id }`,
           label: this.user.username
         },
         {
@@ -237,13 +237,24 @@ export class UserFormComponent implements OnInit {
     this.uploading = true;
     if (req && req.progress) {
       this.uploadProgress = req.progress;
-      this.uploadProgress.subscribe(end => {
+      this.uploadProgress
+      .pipe(
+        finalize( () => {
+          this.uploading = false;
+        })
+      )
+      .subscribe(end => {
         this.uploadProgressCompleted = true;
-        this.uploading = false;
       });
     }
     if (req && req.data) {
-      req.data.subscribe((resp) => {
+      req.data
+      .pipe(
+        finalize( () => {
+          this.submitting = false;
+        })
+      )
+      .subscribe((resp) => {
         console.log('resp', resp);
         if (resp.success) {
           console.log('user updated info', resp['user']);
@@ -257,7 +268,6 @@ export class UserFormComponent implements OnInit {
         } else {
           this.alertifyService.error('Something went wrong while creating new user.');
         }
-        this.submitting = false;
       });
     }
   }

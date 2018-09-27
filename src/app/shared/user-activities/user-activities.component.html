@@ -1,3 +1,8 @@
+<ng-container *ngIf="(userActivities | json) === '{}' && (dates | json) === '[]'">
+  <div class="no-activity">
+    You don't have activities yet, review now!
+  </div>
+</ng-container>
 <ng-container *ngIf="userActivities && dates">
   <div class="activity"
     *ngFor="let date of dates">
@@ -11,13 +16,28 @@
         <mat-icon *ngIf="task['activityType'] === 'review'">forum</mat-icon>
         <mat-icon *ngIf="task['activityType'] === 'entity'">add</mat-icon>
         <div class="task-header-content">
-          <span class="task-title">{{ isCurrentUser ? 'You' : user.username }} {{ task['activityType'] === 'review' ? 'reviewed '+task['Entity']['name'] : 'added '+ task['name'] }} </span>
-          <span *ngIf="task['activityType'] === 'review'" class="rating rating-{{ task['rating'] | ratingLabel | replaceSpaces}}">
-            {{ task['rating'] | ratingLabel }}
+          <span class="task-title">
+            <ng-container *ngIf="task['activityType'] === 'review'">
+              {{ task['userId'] === currentUserId ? 'You' : user.username }} reviewed
+              <a [routerLink]="['/entity/'+task['Entity']['id']]">
+                {{ task['Entity']['name'] }}
+              </a>
+            </ng-container>
+            <ng-container *ngIf="task['activityType'] === 'entity'">
+              {{ task['userId'] === currentUserId ? 'You' : user.username }} added
+              <a [routerLink]="['/entity/'+task['id']]">
+                {{ task['name'] }}
+              </a>
+            </ng-container>
+          </span>
+          <span *ngIf="task['activityType'] === 'review'"
+            class="rating rating-{{ task | ratingLabel | replaceSpaces}}">
+            {{ task | ratingLabel }}
           </span>
         </div>
         <span fxFlex></span>
-        <button *ngIf="isCurrentUser"
+        <button *ngIf="(task['activityType'] === 'entity' && task['userId'] === currentUserId)
+          || (task['activityType'] === 'review' && task['Entity']['userId'] === currentUserId)"
           mat-icon-button
           [matMenuTriggerFor]="activityMenu"
           [matMenuTriggerData]="{task: task}">
@@ -31,8 +51,10 @@
   </div>
 </ng-container>
 <mat-menu #activityMenu="matMenu">
-  <ng-template matMenuContent let-task="task">
-    <button mat-menu-item (click)="editTask(task)">
+  <ng-template matMenuContent
+    let-task="task">
+    <button mat-menu-item
+      (click)="editTask(task)">
       Edit
     </button>
     <button mat-menu-item>

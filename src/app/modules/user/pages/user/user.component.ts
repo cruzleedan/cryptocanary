@@ -44,7 +44,7 @@ export class UserComponent implements OnInit, OnDestroy {
     this.user = this.route.snapshot.data['user'];
     this.globalService.loadingRequests$
       .subscribe((requests) => {
-        this.loading = !!(requests['findUserActivity']);
+        this.loading = !!(requests['findUserActivity']) || !!(requests['updateProfile']);
       });
     this.usernameForm = new FormGroup({
       username: new FormControl('', [

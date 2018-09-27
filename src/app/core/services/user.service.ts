@@ -43,7 +43,7 @@ export class UserService {
     private router: Router,
     private route: ActivatedRoute,
     private socialAuthService: AuthService,
-    private global: GlobalService,
+    private globalService: GlobalService,
     private errorHandler: ErrorHandler
   ) {
 
@@ -52,7 +52,7 @@ export class UserService {
   // This runs once on application startup.
   populate() {
     console.log('populate called');
-    this.global.setLoadingRequests('populate', true);
+    this.globalService.setLoadingRequests('populate', true);
     // If JWT detected, attempt to get & store user's info
     if (this.jwtService.getToken()) {
       this.apiService.get('/user')
@@ -65,7 +65,7 @@ export class UserService {
             return of([]);
           }),
           finalize(() => {
-            this.global.setLoadingRequests('populate', false);
+            this.globalService.setLoadingRequests('populate', false);
           })
         )
         .subscribe(
@@ -81,13 +81,13 @@ export class UserService {
             }
           },
           err => {
-            this.global.setLoadingRequests('populate', false);
+            this.globalService.setLoadingRequests('populate', false);
             console.log('Purge user data due to some error', err);
             this.purgeAuth();
           }
         );
     } else {
-      this.global.setLoadingRequests('populate', false);
+      this.globalService.setLoadingRequests('populate', false);
       console.log('Purge user data since it does not have a token. token is: ', this.jwtService.getToken());
       // Remove any potential remnants of previous auth states
       this.purgeAuth();
@@ -209,7 +209,7 @@ export class UserService {
   }
 
   attemptAuth(type, credentials): Observable<Object> {
-    this.global.setLoadingRequests('attemptAuth', true);
+    this.globalService.setLoadingRequests('attemptAuth', true);
     console.log('attemptAuth called', type);
     const route = (type === 'login') ? '/login' : '';
     return this.apiService.post('/users' + route, credentials, null, true)
@@ -232,7 +232,7 @@ export class UserService {
           }
         ),
         finalize(() => {
-          this.global.setLoadingRequests('attemptAuth', false);
+          this.globalService.setLoadingRequests('attemptAuth', false);
         })
       );
   }
@@ -242,7 +242,7 @@ export class UserService {
     return this.currentUserSubject.value;
   }
   requestPasswordReset(username: string): Observable<{ success: boolean }> {
-    this.global.setLoadingRequests('requestPasswordReset', true);
+    this.globalService.setLoadingRequests('requestPasswordReset', true);
     return this.apiService
       .post('/user/forgot-password', { username })
       .pipe(
@@ -254,7 +254,7 @@ export class UserService {
           return resp;
         }),
         finalize(() => {
-          this.global.setLoadingRequests('requestPasswordReset', false);
+          this.globalService.setLoadingRequests('requestPasswordReset', false);
         })
       );
   }
@@ -262,7 +262,7 @@ export class UserService {
     newPassword: string,
     token: string
   ): Observable<{ success: true }> {
-    this.global.setLoadingRequests('forgotPasswordReset', true);
+    this.globalService.setLoadingRequests('forgotPasswordReset', true);
     return this.apiService
       .put('/user/forgot-password-reset', {
         newPassword,
@@ -277,7 +277,7 @@ export class UserService {
           return resp;
         }),
         finalize(() => {
-          this.global.setLoadingRequests('forgotPasswordReset', false);
+          this.globalService.setLoadingRequests('forgotPasswordReset', false);
         })
       );
   }
@@ -318,7 +318,10 @@ export class UserService {
       const b = typeof body[key] === 'object' ? JSON.stringify(body[key]) : body[key];
       fd.append(key, b);
     }
-    return this.apiService.putWithProg(`/users/new`, fd);
+    this.globalService.setLoadingRequests('create', true);
+    return this.apiService.putWithProg(`/users/new`, fd, false, () => {
+      this.globalService.setLoadingRequests('create', false);
+    });
   }
   // Update the user on the server (email, pass, etc)
   update(user): Observable<User> {
@@ -355,15 +358,20 @@ export class UserService {
       const b = typeof body[key] === 'object' ? JSON.stringify(body[key]) : body[key];
       fd.append(key, b);
     }
+    this.globalService.setLoadingRequests('updateProfile', true);
     if (userId) {
-      return this.apiService.putWithProg(`/user/${userId}/profile`, fd);
+      return this.apiService.putWithProg(`/user/${userId}/profile`, fd, false, () => {
+        this.globalService.setLoadingRequests('updateProfile', false);
+      });
     } else {
-      return this.apiService.putWithProg('/user/profile', fd);
+      return this.apiService.putWithProg('/user/profile', fd, false, () => {
+        this.globalService.setLoadingRequests('updateProfile', false);
+      });
     }
   }
 
   fbAuth(access_token): Observable<any> {
-    this.global.setLoadingRequests('attemptAuth', true);
+    this.globalService.setLoadingRequests('attemptAuth', true);
     console.log('authenticate user ', access_token);
     return this.apiService.post(
       '/users/facebook/token',
@@ -379,7 +387,7 @@ export class UserService {
         return data;
       }),
       finalize(() => {
-        this.global.setLoadingRequests('attemptAuth', false);
+        this.globalService.setLoadingRequests('attemptAuth', false);
       })
     );
   }
@@ -408,9 +416,9 @@ export class UserService {
   }
 
   isAdminOrEntityOwner(id: string): Observable<boolean> {
-    this.global.setLoadingRequests('isAdminOrEntityOwner', true);
+    this.globalService.setLoadingRequests('isAdminOrEntityOwner', true);
     if (this.isAdminSubject) {
-      this.global.setLoadingRequests('isAdminOrEntityOwner', false);
+      this.globalService.setLoadingRequests('isAdminOrEntityOwner', false);
       return of(true);
     }
     return this.apiService.get(`/user/entity/${id}/owner`)
@@ -425,7 +433,7 @@ export class UserService {
           }
         ),
         finalize(() => {
-          this.global.setLoadingRequests('isAdminOrEntityOwner', false);
+          this.globalService.setLoadingRequests('isAdminOrEntityOwner', false);
         })
       );
   }
@@ -450,7 +458,7 @@ export class UserService {
       params[key] = params[key] || defaults[key];
     });
     params.userId = params.userId || '';
-    this.global.setLoadingRequests('findUserEntities', true);
+    this.globalService.setLoadingRequests('findUserEntities', true);
     return this.apiService.get(
       `/user/entities`,
       new HttpParams()
@@ -475,7 +483,7 @@ export class UserService {
         return of([]);
       }),
       finalize(() => {
-        this.global.setLoadingRequests('findUserEntities', false);
+        this.globalService.setLoadingRequests('findUserEntities', false);
       })
     );
   }
@@ -499,7 +507,7 @@ export class UserService {
       params[key] = params[key] || defaults[key];
     });
     params.userId = params.userId || '';
-    this.global.setLoadingRequests('findUserReviews', true);
+    this.globalService.setLoadingRequests('findUserReviews', true);
     return this.apiService.get(
       `/user/reviews`,
       new HttpParams()
@@ -535,7 +543,7 @@ export class UserService {
         this.errorHandler.handleError(error);
       }),
       finalize(() => {
-        this.global.setLoadingRequests('findUserReviews', false);
+        this.globalService.setLoadingRequests('findUserReviews', false);
       })
     );
   }
@@ -559,7 +567,7 @@ export class UserService {
       params[key] = params[key] || defaults[key];
     });
 
-    this.global.setLoadingRequests('findUserActivity', true);
+    this.globalService.setLoadingRequests('findUserActivity', true);
     const route = `/user/${params.userId ? params.userId + '/' : ''}activity`;
     console.log('FIND ACTIVITY ROUTE', route);
     return this.apiService.get(
@@ -579,12 +587,12 @@ export class UserService {
         return res;
       }),
       finalize(() => {
-        this.global.setLoadingRequests('findUserActivity', false);
+        this.globalService.setLoadingRequests('findUserActivity', false);
       })
     );
   }
   blockUserToggle(userId: string, block: boolean): Observable<User> {
-    this.global.setLoadingRequests('blockUserToggle', true);
+    this.globalService.setLoadingRequests('blockUserToggle', true);
     return this.apiService.put(
       `/user/${userId}/block`,
       {
@@ -606,12 +614,12 @@ export class UserService {
           return of(null);
         }),
         finalize(() => {
-          this.global.setLoadingRequests('blockUserToggle', false);
+          this.globalService.setLoadingRequests('blockUserToggle', false);
         })
       );
   }
   findUserById(userId: string): Observable<User> {
-    this.global.setLoadingRequests('findUserById', true);
+    this.globalService.setLoadingRequests('findUserById', true);
     return this.apiService.get(`/users/${userId}`)
       .pipe(
         map((res) => {
@@ -622,12 +630,12 @@ export class UserService {
           return res.data;
         }),
         finalize(() => {
-          this.global.setLoadingRequests('findUserById', false);
+          this.globalService.setLoadingRequests('findUserById', false);
         })
       );
   }
   deleteEntity(entityId: string): Observable<boolean> {
-    this.global.setLoadingRequests('deleteEntity', true);
+    this.globalService.setLoadingRequests('deleteEntity', true);
     return this.apiService.delete(`/user/entity/${entityId}`, true)
       .pipe(
         map(resp => {
@@ -648,12 +656,12 @@ export class UserService {
           return of(null);
         }),
         finalize(() => {
-          this.global.setLoadingRequests('deleteEntity', false);
+          this.globalService.setLoadingRequests('deleteEntity', false);
         })
       );
   }
   deleteReview(entityId: string): Observable<boolean> {
-    this.global.setLoadingRequests('deleteReview', true);
+    this.globalService.setLoadingRequests('deleteReview', true);
     return this.apiService.delete(`/user/review/${entityId}`, true)
       .pipe(
         map(resp => {
@@ -674,12 +682,12 @@ export class UserService {
           return of(null);
         }),
         finalize(() => {
-          this.global.setLoadingRequests('deleteReview', false);
+          this.globalService.setLoadingRequests('deleteReview', false);
         })
       );
   }
   deleteUser(userId: string): Observable<boolean> {
-    this.global.setLoadingRequests('deleteUser', true);
+    this.globalService.setLoadingRequests('deleteUser', true);
     return this.apiService.delete(`/user/${userId}`)
       .pipe(
         map(resp => {
@@ -690,7 +698,7 @@ export class UserService {
           return resp;
         }),
         finalize(() => {
-          this.global.setLoadingRequests('deleteUser', false);
+          this.globalService.setLoadingRequests('deleteUser', false);
         })
       );
   }
@@ -700,7 +708,7 @@ export class UserService {
       sortDirection = Obj['sortDirection'],
       pageNumber = Obj['pageNum'],
       pageSize = Obj['pageSize'];
-    this.global.setLoadingRequests('search', true);
+    this.globalService.setLoadingRequests('search', true);
     return keywords.pipe(
       debounceTime(400),
       distinctUntilChanged(),
@@ -741,7 +749,7 @@ export class UserService {
     Object.keys(defaults).forEach(key => {
       params[key] = params[key] || defaults[key];
     });
-    this.global.setLoadingRequests('findUsers', true);
+    this.globalService.setLoadingRequests('findUsers', true);
     return this.apiService.get(
       '/users',
       new HttpParams()
@@ -766,15 +774,15 @@ export class UserService {
         return of([]);
       }),
       finalize(() => {
-        this.global.setLoadingRequests('search', false);
-        this.global.setLoadingRequests('findUsers', false);
+        this.globalService.setLoadingRequests('search', false);
+        this.globalService.setLoadingRequests('findUsers', false);
       })
     );
   }
   checkUsernameNotTaken(username: string): Observable<boolean> {
-    this.global.setLoadingRequests('checkUsernameNotTaken', true);
+    this.globalService.setLoadingRequests('checkUsernameNotTaken', true);
     if (!username) {
-      this.global.setLoadingRequests('checkUsernameNotTaken', false);
+      this.globalService.setLoadingRequests('checkUsernameNotTaken', false);
       return of(false);
     }
     return this.apiService.get(`/users/checkusername`, new HttpParams().set('username', username))
@@ -791,7 +799,7 @@ export class UserService {
           return of(null);
         }),
         finalize(() => {
-          this.global.setLoadingRequests('checkUsernameNotTaken', false);
+          this.globalService.setLoadingRequests('checkUsernameNotTaken', false);
         })
       );
   }

@@ -1,7 +1,6 @@
 <app-v1>
-  <mat-progress-bar *ngIf="uploading"
-    mode="determinate"
-    [value]="uploadProgress | async"
+  <mat-progress-bar *ngIf="loading"
+    mode="indeterminate"
     color="primary"
     class="absolute-position-important abs-topmost">
   </mat-progress-bar>
@@ -233,9 +232,9 @@
             <button type='submit'
               mat-stroked-button
               color="accent"
-              [disabled]='!userForm.valid || (!!!(croppedImage) && !this.form.dirty) || submitting'>
-              <ng-container *ngIf="uploading">Saving...</ng-container>
-              <ng-container *ngIf="!uploading">Submit</ng-container>
+              [disabled]='!userForm.valid || (!!!(croppedImage) && !this.form.dirty) || loading'>
+              <ng-container *ngIf="loading">Saving...</ng-container>
+              <ng-container *ngIf="!loading">Submit</ng-container>
             </button>
             <button type='button'
               mat-stroked-button

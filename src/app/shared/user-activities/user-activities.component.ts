@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./user-activities.component.scss']
 })
 export class UserActivitiesComponent implements OnInit, OnDestroy {
-  isCurrentUser: boolean;
+  currentUserId: string;
   searchControl: FormControl;
   pageSize: number;
   pageNumber: number;
@@ -32,7 +32,7 @@ export class UserActivitiesComponent implements OnInit, OnDestroy {
     this.pageNumber = 0;
     this.pageSize = 10;
     this.userService.currentUser$.subscribe(user => {
-      this.isCurrentUser = this.user.id === user.id;
+      this.currentUserId = user.id;
     });
   }
 

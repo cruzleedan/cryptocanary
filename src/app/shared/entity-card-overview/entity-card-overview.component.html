@@ -30,9 +30,9 @@
             </span>
           </div> -->
         </div>
-        <div class="rating rating-{{ entity.reviewCount ? (entity.rating | ratingLabel | replaceSpaces): '' }}">{{
+        <div class="rating rating-{{ entity.reviewCount ? (entity | ratingLabel | replaceSpaces): '' }}">{{
           entity | ratingPercent }} {{
-          entity.reviewCount ? (entity.rating | ratingLabel): '' }}</div>
+          entity.reviewCount ? (entity | ratingLabel): '' }}</div>
       </mat-card>
     </a>
     <app-entity-action-buttons fxLayout="row"

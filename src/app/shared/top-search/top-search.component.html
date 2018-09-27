@@ -33,8 +33,8 @@
             fxLayoutAlign="stretch center">
             <span class="name-label">{{ entity.name }}</span>
           </div>
-          <div class="rating rating-{{ entity.rating | ratingLabel | replaceSpaces}}">{{ entity | ratingPercent }} {{
-            entity.rating | ratingLabel }}</div>
+          <div class="rating rating-{{ entity | ratingLabel | replaceSpaces}}">{{ entity | ratingPercent }} {{
+            entity | ratingLabel }}</div>
         </mat-option>
       </ng-container>
     </mat-autocomplete>

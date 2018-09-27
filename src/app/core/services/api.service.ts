@@ -61,10 +61,7 @@ export class ApiService {
       return req;
     }
   }
-  putWithProg(path: string, body, includeError?: boolean) {
-    if (path === '/entities/new') {
-      this.globalService.setLoadingRequests('addNewEntity', true);
-    }
+  putWithProg(path: string, body, includeError?: boolean, cb?: any) {
     const progress = new Subject<number>();
     const data = new Subject<Object>();
     const req = new HttpRequest('PUT', `${environment.baseApiUrl}${path}`, body, {
@@ -114,13 +111,22 @@ export class ApiService {
             return of({});
           }),
           finalize(() => {
-            this.globalService.setLoadingRequests('addNewEntity', false);
+            if (typeof cb === 'function') {
+              cb();
+            }
           })
         )
         .subscribe(subscribeFn);
     } else {
       console.log('Put with prog no error');
       this.http.request(req)
+        .pipe(
+          finalize( () => {
+            if (typeof cb === 'function') {
+              cb();
+            }
+          })
+        )
         .subscribe(subscribeFn);
     }
 

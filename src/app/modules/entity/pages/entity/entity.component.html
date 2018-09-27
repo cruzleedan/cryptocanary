@@ -24,9 +24,9 @@
         fxLayoutGap="10px"
         fxLayoutAlign="stretch baseline">
         <span class="name">{{ entity.name }}</span>
-        <span class="rating rating-{{entity.rating | ratingLabel | replaceSpaces}}">
+        <span class="rating rating-{{entity | ratingLabel | replaceSpaces}}">
           <span class="rating-pct">{{ entity | ratingPercent }}</span>
-          <span class="rating-label">{{ entity.rating | ratingLabel }}</span>
+          <span class="rating-label">{{ entity | ratingLabel }}</span>
         </span>
         <span class="review-count">({{ entity.reviewCount }} {{ entity.reviewCount > 1 ? 'Reviews': 'Review' }})</span>
         <span fxFlex></span>
@@ -53,7 +53,8 @@
           Add A Review
         </button>
         <ng-container *ngFor="let link of entity.links">
-          <button mat-button
+          <button *ngIf="link && link.link && link.name"
+            mat-button
             (click)="linkBtn.click()"
             class="grey-btn">
             <mat-icon>language</mat-icon>

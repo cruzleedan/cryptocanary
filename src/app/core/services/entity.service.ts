@@ -39,7 +39,10 @@ export class EntityService {
       const b = typeof body[key] === 'object' ? JSON.stringify(body[key]) : body[key];
       fd.append(key, b);
     }
-    return this.apiService.putWithProg('/entities/new', fd);
+    this.globalService.setLoadingRequests('addNewEntity', true);
+    return this.apiService.putWithProg('/entities/new', fd, false, () => {
+      this.globalService.setLoadingRequests('addNewEntity', false);
+    });
   }
 
   editEntity(
@@ -55,7 +58,10 @@ export class EntityService {
       const b = typeof body[key] === 'object' ? JSON.stringify(body[key]) : body[key];
       fd.append(key, b);
     }
-    return this.apiService.putWithProg(`/entities/${entityId}/edit`, fd);
+    this.globalService.setLoadingRequests('editEntity', true);
+    return this.apiService.putWithProg(`/entities/${entityId}/edit`, fd, false, () => {
+      this.globalService.setLoadingRequests('editEntity', false);
+    });
   }
 
   findEntityById(entityId: string): Observable<Entity> {
