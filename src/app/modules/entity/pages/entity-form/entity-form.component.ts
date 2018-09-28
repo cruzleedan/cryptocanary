@@ -49,6 +49,7 @@ export class EntityFormComponent implements OnInit, ComponentCanDeactivate {
   currentPage: Breadcrumb;
   currentPages: Breadcrumb[];
   currentUser: User;
+  isAdmin: boolean;
 
   entity: Entity;
 
@@ -88,6 +89,9 @@ export class EntityFormComponent implements OnInit, ComponentCanDeactivate {
     private userService: UserService,
     private globalService: GlobalService
   ) {
+    this.userService.isAdmin$.subscribe(isAdmin => {
+      this.isAdmin = isAdmin;
+    });
     this.entityForm = this.fb.group({
       'categoryId': new FormControl(''),
       'name': new FormControl('', [Validators.required]),
@@ -118,7 +122,7 @@ export class EntityFormComponent implements OnInit, ComponentCanDeactivate {
   ngOnInit() {
   }
   patchEntityForm(loadedEntity: Entity) {
-    if (loadedEntity.userId === this.userService.getCurrentUser().id) {
+    if (loadedEntity.userId === this.userService.getCurrentUser().id || this.isAdmin) {
       this.entityImgUrl = loadedEntity.image ? `${this.baseUrl}/entity/${loadedEntity.id}/${loadedEntity.image}` : this.entityImgUrl;
       this.entityForm.patchValue(loadedEntity);
       this.entityForm.markAsPristine();
