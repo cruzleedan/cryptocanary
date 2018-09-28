@@ -40,7 +40,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     private globalService: GlobalService,
     private userService: UserService
   ) {
-    this.length = 10;
     this.pageSize = 10;
     this.pageIndex = 0;
     this.pageSizeOptions = [10, 25, 50, 100];
@@ -74,6 +73,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       filter
     }, (resp) => {
       this.pendingLength = resp['count'] || 0;
+      this.length = this.pendingLength;
     });
   }
   ngAfterViewInit() {
@@ -104,12 +104,15 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.destroySubject$.complete();
   }
   getEntities(params, cb?: Function) {
-    params = Object.assign({
+    const defaults = {
       field: params.field,
       filter: params.filter,
       pageNumber: 0,
       pageSize: 10
-    }, params);
+    };
+    Object.keys(defaults).forEach(key => {
+      params[key] = params[key] || defaults[key];
+    });
     this.entityService.getEntities(params)
       .pipe(
         debounceTime(400),

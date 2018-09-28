@@ -145,8 +145,8 @@ export class EntityService {
         .set('filter', JSON.stringify(params.filter))
         .set('sortDirection', params.sortDirection)
         .set('sortField', params.sortField)
-        .set('pageNumber', params.pageNumber.toString())
-        .set('pageSize', params.pageSize.toString())
+        .set('pageNumber', typeof params.pageSize === 'number' ? params.pageNumber.toString() : '')
+        .set('pageSize', typeof params.pageNumber === 'number' ? params.pageSize.toString() : '')
     ).pipe(
       map((res) => {
         this.searchingSubject.next(false);
@@ -188,8 +188,8 @@ export class EntityService {
         .set('filter', typeof params.filter === 'string' ? params.filter : JSON.stringify(params.filter))
         .set('sortDirection', params.sortDirection)
         .set('sortField', params.sortField)
-        .set('pageNumber', params.pageNumber.toString())
-        .set('pageSize', params.pageSize.toString()),
+        .set('pageNumber', typeof params.pageSize === 'number' ? params.pageNumber.toString() : '')
+        .set('pageSize', typeof params.pageNumber === 'number' ? params.pageSize.toString() : ''),
       true
     ).pipe(
       map((res) => {
@@ -208,11 +208,16 @@ export class EntityService {
     pageNumber: number,
     pageSize: number
   }): Observable<Entity[]> {
-    params = Object.assign({
+    const defaults = {
+      field: [],
       filter: {},
-      pageNumber: '0', // default pageNumber
-      pageSize: '10' // default pageSize
-    }, params);
+      pageNumber: 0, // default pageNumber
+      pageSize: 10 // default pageSize
+    };
+    Object.keys(defaults).forEach(key => {
+      params[key] = params[key] || defaults[key];
+    });
+
     params.filter = typeof params.filter === 'object' ? params.filter : {approved: true};
     params.field = typeof params.field === 'object' ? params.field : [['createdAt', 'desc']];
     this.globalService.setLoadingRequests('getEntities', true);
@@ -220,8 +225,8 @@ export class EntityService {
       new HttpParams()
         .set('field', JSON.stringify(params.field))
         .set('filter', JSON.stringify(params.filter))
-        .set('pageSize', params.pageSize ? params.pageSize.toString() : '')
-        .set('pageNumber', params.pageNumber ? params.pageNumber.toString() : '')
+        .set('pageSize', typeof params.pageSize === 'number' ? params.pageSize.toString() : '')
+        .set('pageNumber', typeof params.pageNumber === 'number' ? params.pageNumber.toString() : '')
     ).pipe(
       map(res => {
         if (!res.success) {
