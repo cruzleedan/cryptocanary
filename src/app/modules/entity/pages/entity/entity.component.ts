@@ -11,6 +11,7 @@ import { AddReviewDialogComponent } from '../../../../shared/add-review-dialog/a
 import { EntityReviewsComponent } from '../../../../shared/entity-reviews/entity-reviews.component';
 import { Review } from '../../../../core/models/review.model';
 import { GlobalService } from '../../../../core/services/global.service';
+import { UpdateReviewDialogComponent } from '../../../../shared/update-review-dialog/update-review-dialog.component';
 
 @Component({
   selector: 'app-entity',
@@ -97,6 +98,27 @@ export class EntityComponent implements OnInit, OnDestroy {
       width: '600px',
       data: {
         entityId: this.entity.id
+      },
+      panelClass: 'no-margin-dialog'
+    });
+
+    dialogRef.afterClosed().subscribe(resp => {
+      console.log('The dialog was closed result is ', resp);
+      if (resp && typeof resp === 'object') {
+        this.getUserReviews();
+        this.getEntity();
+        this.entityReviews.pageNumber = 0;
+        this.entityReviews.entityReviews = [];
+        this.entityReviews.loadReviews();
+      }
+    });
+  }
+  openEditReviewDialog(review: Review): void {
+    const dialogRef = this.dialog.open(UpdateReviewDialogComponent, {
+      width: '600px',
+      data: {
+        entityId: this.entity.id,
+        review: review
       },
       panelClass: 'no-margin-dialog'
     });

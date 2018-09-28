@@ -19,9 +19,11 @@
         </mat-progress-bar>
         <div fxLayout="row"
           fxLayoutAlign="stretch"
-          fxLayoutGap="5px">
+          fxLayoutGap="5px"
+          class="avatar-action-cont">
           <button *ngIf="isCurrentUser"
             type="button"
+            matTooltip="Upload Image"
             mat-icon-button
             (click)="entityImgFile.click()">
             <mat-icon>camera_alt</mat-icon>
@@ -32,6 +34,7 @@
             fxLayoutAlign="end">
             <button type="button"
               mat-icon-button
+              matTooltip="Save"
               (click)="updateAvatar()">
               <mat-icon>save</mat-icon>
             </button>

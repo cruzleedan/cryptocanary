@@ -83,6 +83,7 @@ import { UserActivitiesComponent } from './user-activities/user-activities.compo
 import { MapToIterablePipe } from './pipes/map-to-iterable.pipe';
 import { EntityActionButtonsComponent } from './entity-action-buttons/entity-action-buttons.component';
 import { V1Component } from './template/v1/v1.component';
+import { UpdateReviewDialogComponent } from './update-review-dialog/update-review-dialog.component';
 
 @NgModule({
   imports: [
@@ -160,7 +161,8 @@ import { V1Component } from './template/v1/v1.component';
     LoadingComponent,
     UserActivitiesComponent,
     EntityActionButtonsComponent,
-    V1Component
+    V1Component,
+    UpdateReviewDialogComponent
   ],
   exports: [
     CommonModule,
@@ -234,7 +236,8 @@ import { V1Component } from './template/v1/v1.component';
     LoadingComponent,
     UserActivitiesComponent,
     EntityActionButtonsComponent,
-    V1Component
+    V1Component,
+    UpdateReviewDialogComponent
   ],
   providers: [
     { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
@@ -246,6 +249,7 @@ import { V1Component } from './template/v1/v1.component';
   entryComponents: [
     MsgDialogComponent,
     AddReviewDialogComponent,
+    UpdateReviewDialogComponent,
     ImageCropperDialogComponent
   ]
 })

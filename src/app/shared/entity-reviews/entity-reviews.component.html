@@ -22,7 +22,7 @@
         <span class="rating rating-{{ review | ratingLabel | replaceSpaces }}">{{
           review | ratingLabel }}
         </span>
-        <button *ngIf="userReview.length && review.id === userReview[0].id"
+        <button *ngIf="(userReview.length && review.id === userReview[0].id) || isAdmin"
           class="more-menu-btn"
           mat-icon-button
           [matMenuTriggerFor]="activityMenu"

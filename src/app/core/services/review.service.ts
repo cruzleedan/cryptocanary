@@ -66,6 +66,25 @@ export class ReviewService {
         })
       );
   }
+  updateReview(
+    reviewId: string,
+    updatedReview: Review
+  ) {
+    this.globalService.setLoadingRequests('updateReview', true);
+    return this.apiService.put(`/reviews/${ reviewId }/update`, updatedReview)
+      .pipe(
+        map(res => {
+          if (!res['success']) {
+            this.alertifyService.error(this.errorUtil.getError(res) || 'Failed to update Review');
+            return of(null);
+          }
+          return res['data'];
+        }),
+        finalize(() => {
+          this.globalService.setLoadingRequests('updateReview', false);
+        })
+      );
+  }
   voteReview(
     reviewId: number,
     voteType: boolean

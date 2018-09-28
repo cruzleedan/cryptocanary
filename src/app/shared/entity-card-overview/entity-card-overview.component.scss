@@ -9,6 +9,7 @@ mat-card.entity-item {
   border-radius: 6px;
   padding: 10px;
   min-height: 64px;
+  box-shadow: none;
 }
 
 .icon-cont {
@@ -29,3 +30,7 @@ mat-card.entity-item {
   font-size: 24px;
 }
 
+.review-count {
+  font-size: 16px;
+  color: #ababab;
+}

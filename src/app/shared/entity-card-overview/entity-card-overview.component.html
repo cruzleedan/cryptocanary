@@ -30,6 +30,10 @@
             </span>
           </div> -->
         </div>
+        <div  *ngIf="entity.approved && entity.reviewCount"
+          class="review-count">
+          ({{ entity.reviewCount }} Review{{ entity.reviewCount > 1 ? 's' : '' }})
+        </div>
         <div class="rating rating-{{ entity.reviewCount ? (entity | ratingLabel | replaceSpaces): '' }}">{{
           entity | ratingPercent }} {{
           entity.reviewCount ? (entity | ratingLabel): '' }}</div>

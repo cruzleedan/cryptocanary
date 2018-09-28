@@ -19,7 +19,7 @@
           <span class="task-title">
             <ng-container *ngIf="task['activityType'] === 'review'">
               {{ task['userId'] === currentUserId ? 'You' : user.username }} reviewed
-              <a [routerLink]="['/entity/'+task['Entity']['id']]">
+              <a [routerLink]="['/entity/'+task['Entity']['id']]" matTooltip="Visit {{ task['Entity']['name'] }}">
                 {{ task['Entity']['name'] }}
               </a>
             </ng-container>

@@ -1,0 +1,65 @@
+<mat-progress-bar mode="indeterminate"
+  *ngIf="loading"
+  color="primary">
+</mat-progress-bar>
+<div class="top-action"
+  fxLayout="row">
+  <div
+    fxFlex
+    fxFlexAlign="center"
+    class="title align-center">Update {{ review.User.username }} Review</div>
+  <button mat-icon-button
+    fxFlexAlign="end"
+    [mat-dialog-close]="true">
+    <mat-icon aria-label="close">close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+    <div class="field"
+      fxLayout="column">
+      <span class="label">Edit rating</span>
+      <!-- <label>Edit review rating</label> -->
+      <mat-radio-group fxLayout="row"
+        formControlName="rating"
+        fxLayoutGap="10px">
+        <div fxLayout="column"
+          fxLayoutGap="10px">
+          <mat-radio-button color="primary"
+            value="0">
+            Not Shady At All
+          </mat-radio-button>
+          <mat-radio-button color="primary"
+            value="1">
+            Slightly Shady
+          </mat-radio-button>
+          <mat-radio-button color="primary"
+            value="2">
+            Shady
+          </mat-radio-button>
+        </div>
+        <div fxLayout="column"
+          fxLayoutGap="10px">
+          <mat-radio-button color="primary"
+            value="3">
+            Very Shady
+          </mat-radio-button>
+          <mat-radio-button color="primary"
+            value="4">
+            Super Shady
+          </mat-radio-button>
+        </div>
+      </mat-radio-group>
+    </div>
+    <div class="field" fxLayout="column">
+      <span class="label">Edit review</span>
+      <mat-form-field fxFlex appearance="outline">
+        <textarea [errorStateMatcher]="matcher" matInput placeholder="Share your honest experience, and help others make better choices."
+          formControlName="review" matTextareaAutosize matAutosizeMinRows=10></textarea>
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end" class="action-cont">
+      <button mat-raised-button color="primary">UPDATE</button>
+    </div>
+  </form>
+</mat-dialog-content>

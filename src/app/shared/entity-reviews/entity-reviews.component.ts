@@ -15,7 +15,8 @@ import { takeUntil } from 'rxjs/operators';
 export class EntityReviewsComponent implements OnInit, OnDestroy {
   baseUrl = environment.baseUrl;
   @Input() entityId$;
-  @Output() editUserReview: EventEmitter<Review> = new EventEmitter();
+  @Output() addUserReview: EventEmitter<Review> = new EventEmitter();
+  @Output() updateUserReview: EventEmitter<Review> = new EventEmitter();
   userReview: Review[];
   entityId: string;
   sortDirection: string;
@@ -24,6 +25,8 @@ export class EntityReviewsComponent implements OnInit, OnDestroy {
   pageSize: number;
   entityReviews: Review[];
   entityTotalReviews: number;
+
+  isAdmin: boolean;
 
   destroySubject$: Subject<void> = new Subject();
   constructor(
@@ -37,6 +40,10 @@ export class EntityReviewsComponent implements OnInit, OnDestroy {
     this.pageNumber = 0;
     this.pageSize = 10;
     this.entityReviews = [];
+
+    this.userService.isAdmin$.subscribe(isAdmin => {
+      this.isAdmin = isAdmin;
+    });
   }
 
   ngOnInit() {
@@ -104,6 +111,10 @@ export class EntityReviewsComponent implements OnInit, OnDestroy {
       });
   }
   editReview(review: Review) {
-    this.editUserReview.emit(review);
+    if (this.isAdmin) {
+      this.updateUserReview.emit(review);
+    } else  {
+      this.addUserReview.emit(review);
+    }
   }
 }
