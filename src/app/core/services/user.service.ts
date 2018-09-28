@@ -121,6 +121,7 @@ export class UserService {
   }
   isUserNotAuthenticated(route?, state?) {
     if (this.isAuthenticatedSubject.getValue()) {
+      this.router.navigate(['/home']);
       return false;
     } else {
       return (async () => {
@@ -130,6 +131,7 @@ export class UserService {
               console.log('Resp', resp);
               const isAuthenticated = !!(resp.success && resp.user);
               this.isAuthenticatedSubject.next(isAuthenticated);
+              this.router.navigate(['/home']);
               return !isAuthenticated;
             }),
             catchError(err => {
@@ -151,9 +153,14 @@ export class UserService {
               try {
                 console.log('Resp', resp);
                 const roles = this.getUserRoles(resp.user);
-                this.isAdminSubject.next(roles.includes('admin'));
-                return roles.includes('admin');
+                const rolesHasAdmin = roles.includes('admin');
+                this.isAdminSubject.next(rolesHasAdmin);
+                if (!rolesHasAdmin) {
+                  this.router.navigate(['/home']);
+                }
+                return rolesHasAdmin;
               } catch (e) {
+                this.router.navigate(['/home']);
                 return false;
               }
             }),

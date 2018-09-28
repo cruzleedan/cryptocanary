@@ -5,12 +5,14 @@ import { EntityComponent } from './pages/entity/entity.component';
 import { EntityFormComponent } from './pages/entity-form/entity-form.component';
 import { UserEntityReviewResolver } from './resolvers/user-entity-review.resolver';
 import { EntityResolver } from './resolvers/entity.resolver';
+import { UserEntityResolver } from './resolvers/user-entity.resolver';
 
 const routes: Routes = [
   {
     path: 'new',
     component: EntityFormComponent,
     canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
     data: {
       breadcrumbs: [
         new Breadcrumb('Home', '/home')
@@ -23,7 +25,8 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     resolve: {
-      entity: EntityResolver
+      entity: EntityResolver,
+      isAdminOrPublisher: UserEntityResolver
     },
     data: {
       breadcrumbs: [

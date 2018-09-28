@@ -35,7 +35,8 @@
           entity.reviewCount ? (entity | ratingLabel): '' }}</div>
       </mat-card>
     </a>
-    <app-entity-action-buttons fxLayout="row"
+    <app-entity-action-buttons *ngIf="isAuthenticated"
+      fxLayout="row"
       fxLayoutAlign="end"
       [menu]="!isAdmin"
       [entity]="entity"

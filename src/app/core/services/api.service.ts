@@ -91,8 +91,8 @@ export class ApiService {
         case HttpEventType.ResponseHeader:
           if (!event.ok && event.status === 423) { // blocked
             progress.complete();
-            data.next({ error: 'blocked' });
             data.complete();
+            data.next({});
           }
           break;
         default:

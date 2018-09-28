@@ -13,11 +13,15 @@ import { Entity } from '../../core/models/entity.model';
 export class EntityCardOverviewComponent implements OnInit {
   baseUrl = environment.baseUrl;
   isAdmin: boolean;
+  isAuthenticated: boolean;
   @Input() data: any[];
   constructor(
     private router: Router,
     private userService: UserService
   ) {
+    this.userService.isAuthenticated$.subscribe(isAuthenticated => {
+      this.isAuthenticated = isAuthenticated;
+    });
     this.userService.isAdmin$.subscribe(isAdmin => {
       this.isAdmin = isAdmin;
     });

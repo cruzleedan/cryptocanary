@@ -150,6 +150,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   getShadiestEntities() {
     this.getEntities({
       field: [['rating', 'desc']],
+      filter: {reviewsRequired: true},
       pageNumber: this.paginator.pageIndex,
       pageSize: this.paginator.pageSize
     }, (resp) => {

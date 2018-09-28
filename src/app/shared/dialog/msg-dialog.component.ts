@@ -2,6 +2,7 @@ import { Component, Inject, OnInit, ChangeDetectorRef, OnDestroy, Output } from 
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { UserService } from '../../core';
 import { EventEmitter } from 'events';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-msg-dialog',
@@ -9,6 +10,7 @@ import { EventEmitter } from 'events';
   styleUrls: ['./msg-dialog.component.scss']
 })
 export class MsgDialogComponent implements OnInit {
+  baseUrl = environment.baseUrl;
   title: string;
   confirmBtnTxt: string;
   cancelBtnTxt: string;
@@ -24,8 +26,8 @@ export class MsgDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data
   ) {
     console.log('MESSAGE DIALOG CONSTRUCTOR ', this.data);
-
-    if (this.data.type && this.data.type === 'error') {
+    const errorTypes = ['error', 'error-block', 'error-forbidden'];
+    if (this.data.type && errorTypes.includes(this.data.type)) {
       const charCount = 100;
       this.msg = this.data.msg || 'Something went wrong!';
       this.msg = this.msg.substr(0, charCount);

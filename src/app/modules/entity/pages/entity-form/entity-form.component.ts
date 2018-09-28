@@ -4,7 +4,7 @@ import { environment } from '../../../../../environments/environment';
 import { NgForm, FormControl, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { MatDialog } from '@angular/material';
-import { EntityService, CategoryService, AlertifyService, UserService, Breadcrumb } from '../../../../core';
+import { EntityService, CategoryService, AlertifyService, UserService, Breadcrumb, User } from '../../../../core';
 import { CustomBlob } from '../../../../shared/helpers/custom-blob';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -48,6 +48,7 @@ export class EntityFormComponent implements OnInit, ComponentCanDeactivate {
   entityImgUrl: string;
   currentPage: Breadcrumb;
   currentPages: Breadcrumb[];
+  currentUser: User;
 
   entity: Entity;
 
@@ -110,24 +111,28 @@ export class EntityFormComponent implements OnInit, ComponentCanDeactivate {
       };
     }
     this.globalService.loadingRequests$.subscribe(requests => {
-      this.loading = !!(requests['addNewEntity']);
+      this.loading = !!(requests['addNewEntity']) || !!(requests['editEntity']);
     });
   }
 
   ngOnInit() {
   }
   patchEntityForm(loadedEntity: Entity) {
-    this.entityImgUrl = loadedEntity.image ? `${this.baseUrl}/entity/${loadedEntity.id}/${loadedEntity.image}` : this.entityImgUrl;
-    this.entityForm.patchValue(loadedEntity);
-    this.entityForm.markAsPristine();
-    this.isEdit = true;
-    this.currentPages = [{
-      href: `/entity/${loadedEntity.id}`,
-      label: loadedEntity.name
-    }, {
-      href: '',
-      label: 'Edit'
-    }];
+    if (loadedEntity.userId === this.userService.getCurrentUser().id) {
+      this.entityImgUrl = loadedEntity.image ? `${this.baseUrl}/entity/${loadedEntity.id}/${loadedEntity.image}` : this.entityImgUrl;
+      this.entityForm.patchValue(loadedEntity);
+      this.entityForm.markAsPristine();
+      this.isEdit = true;
+      this.currentPages = [{
+        href: `/entity/${loadedEntity.id}`,
+        label: loadedEntity.name
+      }, {
+        href: '',
+        label: 'Edit'
+      }];
+    } else {
+      this.router.navigate([`/entity/${loadedEntity.id}`]);
+    }
   }
   getControls(frmGrp: FormGroup, key: string) {
     return (<FormArray>frmGrp.get(key)).controls;
@@ -257,10 +262,15 @@ export class EntityFormComponent implements OnInit, ComponentCanDeactivate {
     }
     if (req && req.progress) {
       this.uploadProgress = req.progress;
-      this.uploadProgress.subscribe(end => {
+      this.uploadProgress
+      .pipe(
+        finalize(() => {
+          this.globalService.setLoadingRequests(this.isEdit ? 'editEntity' : 'addNewEntity', false);
+        })
+      )
+      .subscribe(end => {
         console.log('uploadProgress', end);
         this.uploadProgressCompleted = true;
-        this.uploading = false;
       });
     }
     if (req && req.data) {
@@ -269,6 +279,10 @@ export class EntityFormComponent implements OnInit, ComponentCanDeactivate {
           mergeMap(resp => {
             this.userService.populate();
             return of(resp);
+          }),
+          finalize( () => {
+            this.globalService.setLoadingRequests(this.isEdit ? 'editEntity' : 'addNewEntity', false);
+            this.entityForm.enable();
           })
         )
         .subscribe((n) => {
@@ -283,10 +297,7 @@ export class EntityFormComponent implements OnInit, ComponentCanDeactivate {
               hasBackdrop: true,
               width: '300px'
             });
-          } else if (n && n.error && n.error === 'blocked') {
-            this.authService.showBlockErrPopup();
           }
-          this.entityForm.enable();
         });
     }
   }

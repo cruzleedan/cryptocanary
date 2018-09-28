@@ -107,6 +107,8 @@ export class UserComponent implements OnInit, OnDestroy {
         if (user && typeof user === 'object' && Object.keys(user).length) {
           this.alertifyService.success('Success!');
           this.editUsername = false;
+          this.user = user;
+          this.patchForm();
         }
       });
   }

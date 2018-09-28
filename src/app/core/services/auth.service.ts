@@ -37,12 +37,28 @@ export class AuthService {
   showBlockErrPopup() {
     const dialogRef = this.dialog.open(MsgDialogComponent, {
       data: {
-        type: 'error',
+        type: 'error-block',
         msg: 'Sorry, your account has been blocked.'
       },
-      width: '500px',
+      width: '300px',
+      height: '200px',
       hasBackdrop: true,
-      panelClass: ''
+      panelClass: 'error'
+    });
+    dialogRef.afterClosed().subscribe(resp => {
+      // do something
+    });
+  }
+  showForbiddenErrPopup() {
+    const dialogRef = this.dialog.open(MsgDialogComponent, {
+      data: {
+        type: 'error-forbidden',
+        msg: 'Forbidden.'
+      },
+      width: '300px',
+      height: '200px',
+      hasBackdrop: true,
+      panelClass: 'error'
     });
     dialogRef.afterClosed().subscribe(resp => {
       // do something
