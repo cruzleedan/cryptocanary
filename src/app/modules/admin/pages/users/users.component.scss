@@ -27,3 +27,19 @@
         box-shadow: inset 0 0 0px 1px #d4d8da;
     }
 }
+mat-cell {
+  position: relative;
+}
+.delete-row-mask {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background: #fff;
+  z-index: -1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.mask-no-label {
+  background: rgba(255,255, 255, 0.8);
+}

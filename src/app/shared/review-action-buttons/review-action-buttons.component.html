@@ -1,0 +1,17 @@
+<button mat-icon-button
+  *ngIf="(currentUser && review.userId === currentUser.id) || isAdmin"
+  [matMenuTriggerFor]="reviewMenu">
+  <mat-icon>more_horiz</mat-icon>
+</button>
+<mat-menu #reviewMenu="matMenu">
+  <button mat-menu-item
+    *ngIf="(currentUser && review.userId === currentUser.id) || isAdmin"
+    (click)="openEditReviewDialog()">Edit
+</button>
+  <button mat-menu-item
+    color="warn"
+    *ngIf="(currentUser && review.userId === currentUser.id) || isAdmin"
+    (click)="delete()">
+    Delete
+  </button>
+</mat-menu>

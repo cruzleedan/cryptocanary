@@ -74,7 +74,8 @@
             <ng-container matColumnDef="avatar">
               <mat-header-cell *matHeaderCellDef
                 mat-sort-header> Avatar </mat-header-cell>
-              <mat-cell *matCellDef="let row">
+              <mat-cell *matCellDef="let row; let i = index;">
+                <span class="delete-row-mask mask-no-label" [attr.data-row]="i"></span>
                 <a class="avatar-container" [routerLink]="['/user/'+row.id]" matTooltip="View Profile" matTooltipPosition="after">
                   <img [src]="baseUrl+'/avatar/'+row.id+'/'+row.avatar"
                     alt="Avatar"
@@ -114,8 +115,9 @@
             <!-- Block Flag Column -->
             <ng-container matColumnDef="blockFlag">
               <mat-header-cell *matHeaderCellDef> Block </mat-header-cell>
-              <mat-cell *matCellDef="let row"
+              <mat-cell *matCellDef="let row; let i = index;"
                 (click)="$event.stopPropagation()">
+                <span class="delete-row-mask mask-no-label" [attr.data-row]="i"></span>
                 <mat-slide-toggle [checked]="row.blockFlag"
                   color="warn"
                   (change)="onBlockToggle($event)"
@@ -126,8 +128,9 @@
             <!-- Action Column -->
             <ng-container matColumnDef="action">
               <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
-              <mat-cell *matCellDef="let row"
-                (click)="$event.stopPropagation()">
+              <mat-cell *matCellDef="let row; let i = index;"
+                (click)="$event.stopPropagation()" class="action-column">
+                <span class="delete-row-mask" [attr.data-row]="i">Deleting...</span>
                 <a mat-icon-button
                   [routerLink]="[row.id+'/edit']"
                   color="accent">
@@ -135,7 +138,7 @@
                 </a>
                 <button mat-icon-button
                   color="warn"
-                  (click)="deleteUser(row.id)">
+                  (click)="deleteUser(row.id, i)">
                   <mat-icon aria-label="Delete">delete</mat-icon>
                 </button>
                 <!-- <button mat-icon-button [matMenuTriggerFor]="menu">

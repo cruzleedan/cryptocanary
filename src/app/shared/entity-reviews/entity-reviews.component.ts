@@ -16,7 +16,8 @@ export class EntityReviewsComponent implements OnInit, OnDestroy {
   baseUrl = environment.baseUrl;
   @Input() entityId$;
   @Output() addUserReview: EventEmitter<Review> = new EventEmitter();
-  @Output() updateUserReview: EventEmitter<Review> = new EventEmitter();
+  @Output() afterDelete: EventEmitter<any> = new EventEmitter();
+  @Output() afterUpdate: EventEmitter<any> = new EventEmitter();
   userReview: Review[];
   entityId: string;
   sortDirection: string;
@@ -55,15 +56,18 @@ export class EntityReviewsComponent implements OnInit, OnDestroy {
     this.entityId$
       .subscribe(entityId => {
         this.entityId = entityId;
-        this.entityReviews = [];
-        this.entityTotalReviews = 0;
-        this.pageNumber = 0;
+        this.reset();
         this.loadReviews();
       });
   }
   ngOnDestroy() {
     this.destroySubject$.next();
     this.destroySubject$.complete();
+  }
+  reset() {
+    this.pageNumber = 0;
+    this.pageSize = 10;
+    this.entityReviews = [];
   }
   loadReviews(
     sort: string = 'desc',
@@ -110,11 +114,14 @@ export class EntityReviewsComponent implements OnInit, OnDestroy {
         }
       });
   }
-  editReview(review: Review) {
-    if (this.isAdmin) {
-      this.updateUserReview.emit(review);
-    } else  {
-      this.addUserReview.emit(review);
-    }
+  afterReviewUpdated(event) {
+    this.reset();
+    this.loadReviews();
+    this.afterUpdate.emit(event);
+  }
+  afterReviewDeleted(event) {
+    this.reset();
+    this.loadReviews();
+    this.afterDelete.emit(event);
   }
 }

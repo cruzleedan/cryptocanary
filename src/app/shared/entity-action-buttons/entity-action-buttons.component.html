@@ -11,7 +11,7 @@
   </a>
   <button mat-icon-button
     color="warn"
-    *ngIf="isAdmin"
+    *ngIf="(currentUser && entity.userId === currentUser.id) || isAdmin"
     (click)="delete()">
     <mat-icon>delete_outline</mat-icon>
   </button>
@@ -20,7 +20,7 @@
   <button mat-icon-button
     *ngIf="(currentUser && entity.userId === currentUser.id) || isAdmin"
     [matMenuTriggerFor]="entityMenu">
-    <mat-icon>more_vert</mat-icon>
+    <mat-icon>more_horiz</mat-icon>
   </button>
   <mat-menu #entityMenu="matMenu">
     <a mat-menu-item
@@ -29,7 +29,7 @@
     </a>
     <button mat-menu-item
       color="warn"
-      *ngIf="isAdmin"
+      *ngIf="(currentUser && entity.userId === currentUser.id) || isAdmin"
       (click)="delete()">
       Delete
     </button>

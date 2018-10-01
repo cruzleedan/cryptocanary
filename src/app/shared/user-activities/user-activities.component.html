@@ -19,7 +19,8 @@
           <span class="task-title">
             <ng-container *ngIf="task['activityType'] === 'review'">
               {{ task['userId'] === currentUserId ? 'You' : user.username }} reviewed
-              <a [routerLink]="['/entity/'+task['Entity']['id']]" matTooltip="Visit {{ task['Entity']['name'] }}">
+              <a [routerLink]="['/entity/'+task['Entity']['id']]"
+                matTooltip="Visit {{ task['Entity']['name'] }}">
                 {{ task['Entity']['name'] }}
               </a>
             </ng-container>
@@ -36,13 +37,15 @@
           </span>
         </div>
         <span fxFlex></span>
-        <button *ngIf="(task['activityType'] === 'entity' && task['userId'] === currentUserId)
-          || (task['activityType'] === 'review' && task['Entity']['userId'] === currentUserId)"
-          mat-icon-button
-          [matMenuTriggerFor]="activityMenu"
-          [matMenuTriggerData]="{task: task}">
-          <mat-icon>more_horiz</mat-icon>
-        </button>
+        <ng-container *ngIf="(task['activityType'] === 'entity' && task['userId'] === currentUserId)">
+          <app-entity-action-buttons [entity]="task"
+            [menu]="true"
+            (afterDelete)="afterEntityDeleted($event)">
+          </app-entity-action-buttons>
+        </ng-container>
+        <ng-container *ngIf="(task['activityType'] === 'review' && task['userId'] === currentUserId)">
+          <app-review-action-buttons [review]="task" (afterDelete)="afterReviewDeleted($event)" (afterUpdate)="afterReviewUpdated($event)"></app-review-action-buttons>
+        </ng-container>
       </div>
       <div class="task-desc"
         [innerHTML]="task['activityType'] === 'review' ? task['review'] : task['desc']">
@@ -50,15 +53,4 @@
     </div>
   </div>
 </ng-container>
-<mat-menu #activityMenu="matMenu">
-  <ng-template matMenuContent
-    let-task="task">
-    <button mat-menu-item
-      (click)="editTask(task)">
-      Edit
-    </button>
-    <button mat-menu-item>
-      Delete
-    </button>
-  </ng-template>
-</mat-menu>
+

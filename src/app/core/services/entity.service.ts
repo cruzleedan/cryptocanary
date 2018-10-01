@@ -130,13 +130,16 @@ export class EntityService {
     pageNumber: number,
     pageSize: number
   }): Observable<{ data: Entity[], count: number, pending: number }> {
-    params = Object.assign({
+    const defaults = {
       filter: {},
       sortDirection: 'asc',
       sortField: 'createdAt',
       pageNumber: 0,
       pageSize: 10
-    }, params);
+    };
+    Object.keys(defaults).forEach(key => {
+      params[key] = params[key] || defaults[key];
+    });
 
     this.globalService.setLoadingRequests('findEntities', true);
     return this.apiService.get(
@@ -174,13 +177,17 @@ export class EntityService {
     pageNumber: number,
     pageSize: number
   }): Observable<Object> {
-    params = Object.assign({
+    const defaults = {
       filter: '',
       sortDirection: 'desc',
       sortField: 'rating',
       pageNumber: 0,
       pageSize: 10
-    }, params);
+    };
+    Object.keys(defaults).forEach(key => {
+      params[key] = params[key] || defaults[key];
+    });
+
     console.log('find reviews', params);
     return this.apiService.get(
       `/entities/${params.entityId}/reviews`,

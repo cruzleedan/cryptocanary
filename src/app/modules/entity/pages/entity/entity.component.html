@@ -26,7 +26,7 @@
         <span class="name">{{ entity.name }}</span>
         <span class="rating rating-{{entity | ratingLabel | replaceSpaces}}">
           <span class="rating-pct">{{ entity | ratingPercent }}</span>
-          <span class="rating-label">{{ entity | ratingLabel }}</span>
+          <span class="rating-label">Shady</span>
         </span>
         <span class="review-count">({{ entity.reviewCount }} {{ entity.reviewCount > 1 ? 'Reviews': 'Review' }})</span>
         <span fxFlex></span>
@@ -65,7 +65,7 @@
         <app-social-share-button></app-social-share-button>
       </div>
       <section class="review-cont">
-        <app-entity-reviews [entityId$]="entityId$" (updateUserReview)="openEditReviewDialog($event)" (addUserReview)="openAddReviewDialog()"></app-entity-reviews>
+        <app-entity-reviews [entityId$]="entityId$" (addUserReview)="openAddReviewDialog()" (afterDelete)="getEntity()" (afterUpdate)="getEntity()"></app-entity-reviews>
       </section>
     </div>
   </section>

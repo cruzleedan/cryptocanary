@@ -24,6 +24,7 @@ const routes: Routes = [
     path: 'users',
     component: UsersComponent,
     canActivate: [AdminGuard],
+    runGuardsAndResolvers: 'always',
     data: {
       breadcrumbs: [
         new Breadcrumb('Home', '/home')

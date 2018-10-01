@@ -58,7 +58,7 @@ export class UpdateReviewDialogComponent implements OnInit, OnDestroy {
       ]),
       title: new FormControl('My Review')
     });
-    if (this.isAdmin) {
+    if (this.isAdmin || currentUser.id === data.review.userId) {
       this.review = data.review || {};
       console.log('PATCH FORM WITH ', this.review);
 

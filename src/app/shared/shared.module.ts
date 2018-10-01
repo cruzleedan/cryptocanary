@@ -40,6 +40,7 @@ import {
   MatSlideToggleModule,
   MatTooltipModule,
   MatRadioModule,
+  MatSliderModule,
 } from '@angular/material';
 import { MatIcons } from './helpers/mat-icons';
 
@@ -84,6 +85,7 @@ import { MapToIterablePipe } from './pipes/map-to-iterable.pipe';
 import { EntityActionButtonsComponent } from './entity-action-buttons/entity-action-buttons.component';
 import { V1Component } from './template/v1/v1.component';
 import { UpdateReviewDialogComponent } from './update-review-dialog/update-review-dialog.component';
+import { ReviewActionButtonsComponent } from './review-action-buttons/review-action-buttons.component';
 
 @NgModule({
   imports: [
@@ -123,6 +125,7 @@ import { UpdateReviewDialogComponent } from './update-review-dialog/update-revie
     MatSlideToggleModule,
     MatTooltipModule,
     MatRadioModule,
+    MatSliderModule,
     // material components end
     EditorModule,
     ImageCropperModule,
@@ -162,7 +165,8 @@ import { UpdateReviewDialogComponent } from './update-review-dialog/update-revie
     UserActivitiesComponent,
     EntityActionButtonsComponent,
     V1Component,
-    UpdateReviewDialogComponent
+    UpdateReviewDialogComponent,
+    ReviewActionButtonsComponent
   ],
   exports: [
     CommonModule,
@@ -200,6 +204,7 @@ import { UpdateReviewDialogComponent } from './update-review-dialog/update-revie
     MatSlideToggleModule,
     MatTooltipModule,
     MatRadioModule,
+    MatSliderModule,
     // material components end
     EditorModule,
     ShareButtonsModule,
@@ -237,7 +242,8 @@ import { UpdateReviewDialogComponent } from './update-review-dialog/update-revie
     UserActivitiesComponent,
     EntityActionButtonsComponent,
     V1Component,
-    UpdateReviewDialogComponent
+    UpdateReviewDialogComponent,
+    ReviewActionButtonsComponent
   ],
   providers: [
     { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },

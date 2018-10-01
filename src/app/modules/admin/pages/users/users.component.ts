@@ -3,7 +3,7 @@ import { environment } from '../../../../../environments/environment';
 import { SelectionModel } from '@angular/cdk/collections';
 import { UsersDataSource, UserService, AlertifyService } from '../../../../core';
 import { FormControl } from '@angular/forms';
-import { MatDialog, MatPaginator, MatSort, MatSlideToggle } from '@angular/material';
+import { MatDialog, MatPaginator, MatSort, MatSlideToggle, MatTable } from '@angular/material';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import { Params } from '@fortawesome/fontawesome-svg-core';
 import { MsgDialogComponent } from '../../../../shared/dialog/msg-dialog.component';
@@ -16,6 +16,7 @@ import { GlobalService } from '../../../../core/services/global.service';
 })
 export class UsersComponent implements OnInit, AfterViewInit {
   baseUrl = environment.baseUrl;
+  masks = [];
   loading: boolean;
   showNavListCode;
   displayedColumns = ['select', 'avatar', 'username', 'firstname', 'lastname', 'email', 'blockFlag', 'action'];
@@ -30,15 +31,21 @@ export class UsersComponent implements OnInit, AfterViewInit {
     private globalService: GlobalService
   ) {
     this.globalService.loadingRequests$.subscribe(requests => {
-      this.loading = !!(requests['findUsers']) || !!(requests['search']);
+      this.loading = !!(requests['findUsers']) || !!(requests['search']) || !!(requests['loadUsers']) || !!(requests['deleteUser']);
+      if (this.masks.length) {
+        this.masks.forEach(mask => {
+          mask.style.zIndex = !!(requests['deleteUser']) ? 10 : -1;
+        });
+      }
     });
   }
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('filter') filter: ElementRef;
+  @ViewChild(MatTable) table: MatTable<any>;
 
   ngOnInit() {
-    this.dataSource = new UsersDataSource(this.userService);
+    this.dataSource = new UsersDataSource(this.userService, this.globalService);
     this.loadUsers();
     this.sort.sortChange.subscribe(sort => {
       this.loadUsers();
@@ -124,7 +131,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
         }
       });
   }
-  deleteUser(id: string) {
+  deleteUser(id: string, index: number) {
+    this.masks = this.table['_elementRef'].nativeElement.querySelectorAll(`.delete-row-mask[data-row='${index}']`);
     const dialogRef = this.dialog.open(MsgDialogComponent, {
       data: {
         type: 'confirm',
@@ -137,7 +145,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(resp => {
       if (resp && resp.proceed) {
         this.userService.deleteUser(id).subscribe(res => {
-          if (res['success'] && res['data']) {
+          if (res['success']) {
             this.loadUsers();
             this.alertifyService.success(`Successfully deleted`);
           }

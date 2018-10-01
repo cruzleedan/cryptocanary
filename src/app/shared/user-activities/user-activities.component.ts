@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material';
 import { AddReviewDialogComponent } from '../add-review-dialog/add-review-dialog.component';
 import { Review } from '../../core/models/review.model';
 import { Router } from '@angular/router';
+import { UpdateReviewDialogComponent } from '../update-review-dialog/update-review-dialog.component';
 @Component({
   selector: 'app-user-activities',
   templateUrl: './user-activities.component.html',
@@ -42,6 +43,12 @@ export class UserActivitiesComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroySubject$.next();
     this.destroySubject$.complete();
+  }
+  reset() {
+    this.pageNumber = 0;
+    this.pageSize = 10;
+    this.dates = [];
+    this.userActivities = {};
   }
   loadUserActivity(
     sort: string = 'desc',
@@ -102,30 +109,16 @@ export class UserActivitiesComponent implements OnInit, OnDestroy {
       };
     });
   }
-  editTask(task) {
-    if (task.activityType === 'review') {
-      this.openAddReviewDialog(task);
-    } else if (task.activityType === 'entity') {
-      this.router.navigate([`/entity/${task.id}/edit`]);
-    }
+  afterReviewUpdated(event) {
+    this.reset();
+    this.loadUserActivity();
   }
-  openAddReviewDialog(userReview: Review): void {
-    console.log('open reiview dialog with ', userReview);
-    const dialogRef = this.dialog.open(AddReviewDialogComponent, {
-      width: '600px',
-      data: {
-        userReview: [userReview], entityId: userReview.Entity.id
-      },
-      panelClass: 'no-margin-dialog'
-    });
-
-    dialogRef.afterClosed().subscribe(resp => {
-      console.log('The dialog was closed result is ', resp);
-      if (resp && typeof resp === 'object') {
-        this.userActivities = {};
-        this.dates = [];
-        this.loadUserActivity();
-      }
-    });
+  afterReviewDeleted(event) {
+    this.reset();
+    this.loadUserActivity();
+  }
+  afterEntityDeleted(event) {
+    this.reset();
+    this.loadUserActivity();
   }
 }

@@ -63,14 +63,14 @@ export class EntityComponent implements OnInit, OnDestroy {
   }
   getUserReviews() {
     this.userService.findUserReviews({
-      filter: {entityId: this.entity.id},
+      filter: { entityId: this.entity.id },
       sortDirection: 'desc',
       sortField: 'createdAt',
       pageNumber: 0,
       pageSize: 10
     })
-    .pipe(takeUntil(this.destroySubject$))
-    .subscribe();
+      .pipe(takeUntil(this.destroySubject$))
+      .subscribe();
   }
   getEntity() {
     this.entityService.findEntityById(this.entityIdSubject.getValue())
@@ -113,27 +113,27 @@ export class EntityComponent implements OnInit, OnDestroy {
       }
     });
   }
-  openEditReviewDialog(review: Review): void {
-    const dialogRef = this.dialog.open(UpdateReviewDialogComponent, {
-      width: '600px',
-      data: {
-        entityId: this.entity.id,
-        review: review
-      },
-      panelClass: 'no-margin-dialog'
-    });
+  // openEditReviewDialog(review: Review): void {
+  //   const dialogRef = this.dialog.open(UpdateReviewDialogComponent, {
+  //     width: '600px',
+  //     data: {
+  //       entityId: this.entity.id,
+  //       review: review
+  //     },
+  //     panelClass: 'no-margin-dialog'
+  //   });
 
-    dialogRef.afterClosed().subscribe(resp => {
-      console.log('The dialog was closed result is ', resp);
-      if (resp && typeof resp === 'object') {
-        this.getUserReviews();
-        this.getEntity();
-        this.entityReviews.pageNumber = 0;
-        this.entityReviews.entityReviews = [];
-        this.entityReviews.loadReviews();
-      }
-    });
-  }
+  //   dialogRef.afterClosed().subscribe(resp => {
+  //     console.log('The dialog was closed result is ', resp);
+  //     if (resp && typeof resp === 'object') {
+  //       this.getUserReviews();
+  //       this.getEntity();
+  //       this.entityReviews.pageNumber = 0;
+  //       this.entityReviews.entityReviews = [];
+  //       this.entityReviews.loadReviews();
+  //     }
+  //   });
+  // }
   afterEntityDeleted() {
     this.router.navigate(['/home']);
   }

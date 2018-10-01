@@ -4,6 +4,7 @@ import { catchError, finalize, share } from 'rxjs/operators';
 import { Entity } from '../models/entity.model';
 import { UserService } from '../services';
 import { User } from '../models';
+import { GlobalService } from '../services/global.service';
 
 export class UsersDataSource implements DataSource<User> {
   private usersSubject = new BehaviorSubject<User[]>([]);
@@ -12,7 +13,10 @@ export class UsersDataSource implements DataSource<User> {
   public loading$ = this.loadingSubject.asObservable();
   public count;
   public renderedData = [];
-  constructor(private userService: UserService) { }
+  constructor(
+    private userService: UserService,
+    private globalService: GlobalService
+  ) { }
 
   connect(collectionViewer: CollectionViewer): Observable<User[]> {
     console.log('Connecting data source');
@@ -36,13 +40,17 @@ export class UsersDataSource implements DataSource<User> {
   ) {
     console.log('finding users...');
     this.loadingSubject.next(true);
+    this.globalService.setLoadingRequests('loadUsers', true);
     this.userService.findUsers(
       params
     )
       .pipe(
         share(),
         catchError(() => of([])),
-        finalize(() => this.loadingSubject.next(false))
+        finalize(() => {
+          this.globalService.setLoadingRequests('loadUsers', false);
+          this.loadingSubject.next(false);
+        })
       )
       .subscribe(users => {
         console.log('users', users);

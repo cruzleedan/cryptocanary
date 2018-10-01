@@ -9,6 +9,7 @@ import { Subject } from 'rxjs';
 import { ImageCropperDialogComponent } from '../../../../shared/cropper/image-cropper-dialog.component';
 import { CustomBlob } from '../../../../shared/helpers/custom-blob';
 import { GlobalService } from '../../../../core/services/global.service';
+import { MsgDialogComponent } from '../../../../shared/dialog/msg-dialog.component';
 
 @Component({
   selector: 'app-user',
@@ -44,7 +45,7 @@ export class UserComponent implements OnInit, OnDestroy {
     this.user = this.route.snapshot.data['user'];
     this.globalService.loadingRequests$
       .subscribe((requests) => {
-        this.loading = !!(requests['findUserActivity']) || !!(requests['updateProfile']);
+        this.loading = !!(requests['findUserActivity']) || !!(requests['updateProfile']) || !!(requests['deleteAccount']);
       });
     this.usernameForm = new FormGroup({
       username: new FormControl('', [
@@ -181,5 +182,27 @@ export class UserComponent implements OnInit, OnDestroy {
         }
       });
     }
+  }
+  deleteAccount() {
+    const dialogRef = this.dialog.open(MsgDialogComponent, {
+      data: {
+        type: 'confirm',
+        msg: `Are you sure, you want to cancel your account?`
+      },
+      width: '500px',
+      hasBackdrop: true,
+      panelClass: ''
+    });
+    dialogRef.afterClosed().subscribe(resp => {
+      if (resp && resp.proceed) {
+        this.userService.deleteAccount().subscribe(res => {
+          if (res['success']) {
+            this.userService.purgeAuth();
+            this.router.navigate(['/home']);
+            this.alertifyService.success(`Account successfully deleted`);
+          }
+        });
+      }
+    });
   }
 }

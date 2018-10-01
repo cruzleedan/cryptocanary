@@ -1,4 +1,56 @@
 <app-page-layout>
+  <div fxLayout="row">
+    <div class="found-count"
+      fxFlex
+      fxLayoutAlign="stretch center">{{ entities.length > 0 ? entities.length : 'No Results' }} Found</div>
+    <button mat-icon-button
+      (click)="toggleFilterPanel()"
+      matTooltip="Filter results">
+      <mat-icon>filter_list</mat-icon>
+    </button>
+  </div>
+  <!-- filter starts -->
+  <mat-expansion-panel (closed)="afterFilterPanelClosed()"
+    [fxHide]="isFilterPanelHidden"
+    hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Advance Filter
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <section fxLayout="column">
+      <div fxFlex>
+        <label>Shadiness</label>
+        <mat-slider class="full-width"
+          max="100"
+          color="primary"
+          min="0"
+          step="10"
+          thumbLabel
+          [displayWith]="formatLabel"
+          tickInterval="10">
+        </mat-slider>
+      </div>
+
+      <div fxLayout="row"
+        fxLayoutGap="20px">
+        <mat-form-field appearance="outline">
+          <input matInput
+            placeholder="Publisher's username">
+          <mat-icon matSuffix>person</mat-icon>
+        </mat-form-field>
+      </div>
+    </section>
+
+    <mat-action-row>
+      <button mat-button
+        color="primary">Apply</button>
+      <button mat-button
+        color="primary">Reset</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+  <!-- filter ends -->
   <app-entity-card-overview [data]="entities"
     fxLayout="column"
     fxLayoutGap="10px">

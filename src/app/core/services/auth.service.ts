@@ -13,6 +13,24 @@ export class AuthService {
     private alertifyService: AlertifyService,
     private ngZone: NgZone
   ) { }
+  showAccountReactivationPopup(callback?) {
+    this.ngZone.run(() => {
+      const dialogRef = this.dialog.open(MsgDialogComponent, {
+        data: {
+          type: 'confirm',
+          msg: `Do you wish to reactivate your previous account instead?`
+        },
+        width: '500px',
+        hasBackdrop: true,
+        panelClass: ''
+      });
+      dialogRef.afterClosed().subscribe(resp => {
+        if (resp && resp.proceed && callback && typeof callback === 'function') {
+          callback(resp);
+        }
+      });
+    });
+  }
   showAuthFormPopup(callback?) {
     console.log('showAuthFormPopup');
 

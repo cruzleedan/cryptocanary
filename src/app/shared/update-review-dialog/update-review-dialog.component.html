@@ -7,7 +7,7 @@
   <div
     fxFlex
     fxFlexAlign="center"
-    class="title align-center">Update {{ review.User.username }} Review</div>
+    class="title align-center">Update {{ review.User && review.User.username ? review.User.username : '' }} Review</div>
   <button mat-icon-button
     fxFlexAlign="end"
     [mat-dialog-close]="true">

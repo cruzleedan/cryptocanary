@@ -1,12 +1,9 @@
-<mat-progress-bar
-  *ngIf="loading"
+<mat-progress-bar *ngIf="loading"
   mode="indeterminate"
   color="primary"
-  class="absolute-position-important abs-topmost"
-></mat-progress-bar>
-<app-breadcrumbs [size]="'wide'"
-  [currentPage]="currentPage"></app-breadcrumbs>
-<app-page-layout [size]="'wide'">
+  class="absolute-position-important abs-topmost"></mat-progress-bar>
+<app-breadcrumbs [currentPage]="currentPage"></app-breadcrumbs>
+<app-page-layout>
   <section fxLayout="row wrap"
     fxLayoutGap="50px">
     <div class="side-content"
@@ -103,6 +100,11 @@
           routerLinkActive="active">
           <mat-icon>forum</mat-icon>
           Activity
+        </mat-list-item>
+        <mat-list-item (click)="deleteAccount()"
+          routerLinkActive="active">
+          <mat-icon>delete_sweep</mat-icon>
+          Cancel Account
         </mat-list-item>
         <mat-list-item *ngIf="isCurrentUser"
           (click)="logout()">

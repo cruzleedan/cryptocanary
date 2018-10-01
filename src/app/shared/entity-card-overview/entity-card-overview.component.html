@@ -36,7 +36,7 @@
         </div>
         <div class="rating rating-{{ entity.reviewCount ? (entity | ratingLabel | replaceSpaces): '' }}">{{
           entity | ratingPercent }} {{
-          entity.reviewCount ? (entity | ratingLabel): '' }}</div>
+          entity.reviewCount ? 'Shady': '' }}</div>
       </mat-card>
     </a>
     <app-entity-action-buttons *ngIf="isAuthenticated"

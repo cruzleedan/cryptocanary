@@ -129,4 +129,20 @@ export class ReviewService {
       })
     );
   }
+  deleteReview(reviewId: string): Observable<Object> {
+    this.globalService.setLoadingRequests('deleteReview', true);
+    return this.apiService.delete(`/reviews/${ reviewId }`)
+      .pipe(
+        map(res => {
+          if (!res.success) {
+            this.alertifyService.error(this.errorUtil.getError(res) || 'Failed to delete review');
+            return of(null);
+          }
+          return res;
+        }),
+        finalize(() => {
+          this.globalService.setLoadingRequests('deleteReview', false);
+        })
+      );
+  }
 }

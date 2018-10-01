@@ -1,5 +1,5 @@
 import { Injectable, ErrorHandler } from '@angular/core';
-import { BehaviorSubject, of, ReplaySubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, of, Observable, Subject } from 'rxjs';
 import { User } from '../models/user.model';
 import { distinctUntilChanged, map, catchError, reduce, debounceTime, switchMap, mergeMap, finalize } from 'rxjs/operators';
 import { ApiService } from './api.service';
@@ -10,14 +10,15 @@ import { HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Util } from '../errors/helpers/util';
 import { Entity } from '../models/entity.model';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AuthService } from 'angularx-social-login';
+
 import {
-  FacebookLoginProvider,
+  FacebookLoginProvider, AuthService,
   // GoogleLoginProvider,
   // LinkedInLoginProvider
 } from 'angularx-social-login';
 import { flatten } from '@angular/core/src/render3/util';
 import { GlobalService } from './global.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -41,10 +42,9 @@ export class UserService {
     private alertifyService: AlertifyService,
     private errorUtil: Util,
     private router: Router,
-    private route: ActivatedRoute,
     private socialAuthService: AuthService,
     private globalService: GlobalService,
-    private errorHandler: ErrorHandler
+    private errorHandler: ErrorHandler,
   ) {
 
   }
@@ -385,7 +385,9 @@ export class UserService {
       { 'access_token': access_token }
     ).pipe(
       map((data) => {
-        if (!data.success) {
+        if (!data.success && this.errorUtil.getError(data) === 'Account deactivated') {
+          return data;
+        } else if (!data.success) {
           this.alertifyService.error(this.errorUtil.getError(data) || 'Login failed.');
           return of(null);
         }
@@ -690,6 +692,40 @@ export class UserService {
         }),
         finalize(() => {
           this.globalService.setLoadingRequests('deleteReview', false);
+        })
+      );
+  }
+  restoreAccount(userId: string) {
+    this.globalService.setLoadingRequests('restoreAccount', true);
+    return this.apiService.put(`/user/${userId}/restore`)
+    .pipe(
+      map(resp => {
+        if (!resp.success) {
+          this.alertifyService.error(this.errorUtil.getError(resp) || 'Failed to restore account');
+        } else if (resp.success && resp.user) {
+          resp.user.token = resp.token;
+          this.setAuth(resp.user);
+        }
+        return resp;
+      }),
+      finalize(() => {
+        this.globalService.setLoadingRequests('restoreAccount', false);
+      })
+    );
+  }
+  deleteAccount(): Observable<any> {
+    this.globalService.setLoadingRequests('deleteAccount', true);
+    return this.apiService.delete(`/user`)
+      .pipe(
+        map(resp => {
+          if (!resp.success) {
+            this.alertifyService.error(this.errorUtil.getError(resp) || 'Failed to delete your account.');
+            return of(null);
+          }
+          return resp;
+        }),
+        finalize(() => {
+          this.globalService.setLoadingRequests('deleteAccount', false);
         })
       );
   }
