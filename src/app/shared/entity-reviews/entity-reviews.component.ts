@@ -126,6 +126,10 @@ export class EntityReviewsComponent implements OnInit, OnDestroy {
     this.loadReviews();
     this.afterDelete.emit(event);
   }
+  reloadEntityReviews() {
+    this.reset();
+    this.loadReviews();
+  }
   sortReviews(event: MatSelectChange) {
     this.reset();
     const field = event.value;

@@ -26,7 +26,7 @@
         <span class="name">{{ entity.name }}</span>
         <span class="rating rating-{{entity | ratingLabel | replaceSpaces}}">
           <span class="rating-pct">{{ entity | ratingPercent }}</span>
-          <span class="rating-label">Shady</span>
+          <span *ngIf="entity.reviewCount" class="rating-label">Shady</span>
         </span>
         <span class="review-count">({{ entity.reviewCount }} {{ entity.reviewCount > 1 ? 'Reviews': 'Review' }})</span>
         <span fxFlex></span>

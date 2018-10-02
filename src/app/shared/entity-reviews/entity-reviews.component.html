@@ -23,6 +23,20 @@
       </ng-template>
     </button>
   </div>
+  <div *ngIf="!entityReviews.length">
+    <div fxLayout="row"
+      fxLayoutAlign="center">
+      <button mat-icon-button
+        matTooltip="Reload reviews"
+        matTooltipPosition="after"
+        (click)="reloadEntityReviews()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
+    <div class="no-reviews">
+      No reviews yet
+    </div>
+  </div>
   <div class="review-item"
     fxLayout="row wrap"
     fxLayoutGap="10px"
