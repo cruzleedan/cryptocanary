@@ -30,7 +30,7 @@ export class TopSearchComponent implements OnInit, OnDestroy {
       sortField: 'entity_name',
       sortDirection: 'asc',
       pageNum: 0,
-      pageSize: 5
+      pageSize: 10
     })
       .pipe(takeUntil(this.destroySubject$))
       .subscribe(

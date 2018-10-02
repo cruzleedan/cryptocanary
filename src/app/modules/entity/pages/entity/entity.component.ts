@@ -45,7 +45,8 @@ export class EntityComponent implements OnInit, OnDestroy {
     console.log(this.route.snapshot);
     this.entity = this.entity || <Entity>{};
     this.globalService.loadingRequests$.subscribe(requests => {
-      this.loading = !!(requests['addReview']) || !!(requests['findEntityById']);
+      const req = ['deleteEntity', 'approveEntity', 'addReview', 'findEntityById'];
+      this.loading = req.some(r => !!(requests[r]));
     });
   }
 

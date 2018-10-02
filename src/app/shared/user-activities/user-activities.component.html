@@ -1,4 +1,9 @@
 <ng-container *ngIf="(userActivities | json) === '{}' && (dates | json) === '[]'">
+  <div fxLayout="row" fxLayoutAlign="center">
+    <button mat-icon-button matTooltip="Reload activities" matTooltipPosition="after" (click)="reloadUserActivities()">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </div>
   <div class="no-activity">
     You don't have activities yet, review now!
   </div>
@@ -44,7 +49,9 @@
           </app-entity-action-buttons>
         </ng-container>
         <ng-container *ngIf="(task['activityType'] === 'review' && task['userId'] === currentUserId)">
-          <app-review-action-buttons [review]="task" (afterDelete)="afterReviewDeleted($event)" (afterUpdate)="afterReviewUpdated($event)"></app-review-action-buttons>
+          <app-review-action-buttons [review]="task"
+            (afterDelete)="afterReviewDeleted($event)"
+            (afterUpdate)="afterReviewUpdated($event)"></app-review-action-buttons>
         </ng-container>
       </div>
       <div class="task-desc"
@@ -53,4 +60,3 @@
     </div>
   </div>
 </ng-container>
-

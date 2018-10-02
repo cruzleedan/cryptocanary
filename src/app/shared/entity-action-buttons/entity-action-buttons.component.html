@@ -1,24 +1,32 @@
+<span #mask
+  class="mask"
+  [attr.data-entity]="entity.id"></span>
 <ng-container *ngIf="!menu">
   <mat-slide-toggle aria-label="approved"
     *ngIf="!entity.approved"
     [checked]="entity.approved"
     color="primary"
-    (change)="approveChange($event)">{{ entity.approved ? 'Approved' : 'Pending' }}</mat-slide-toggle>
+    (change)="approveChange($event);"
+    (click)="approveClicked()">
+    {{ entity.approved ? 'Approved' : 'Pending' }}
+  </mat-slide-toggle>
   <a mat-icon-button
     *ngIf="(currentUser && entity.userId === currentUser.id) || isAdmin"
+    (click)="$event.stopPropagation(); $event.preventDefault();"
     [routerLink]="['/entity/'+entity.id+'/edit']">
     <mat-icon>edit</mat-icon>
   </a>
   <button mat-icon-button
     color="warn"
     *ngIf="(currentUser && entity.userId === currentUser.id) || isAdmin"
-    (click)="delete()">
+    (click)="delete(); $event.stopPropagation(); $event.preventDefault();">
     <mat-icon>delete_outline</mat-icon>
   </button>
 </ng-container>
 <ng-container *ngIf="menu">
   <button mat-icon-button
     *ngIf="(currentUser && entity.userId === currentUser.id) || isAdmin"
+    (click)="$event.stopPropagation(); $event.preventDefault();"
     [matMenuTriggerFor]="entityMenu">
     <mat-icon>more_horiz</mat-icon>
   </button>

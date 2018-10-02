@@ -23,7 +23,7 @@ export class SearchedEntitiesResolver implements Resolve<{ data: Entity[], count
         sortDirection: 'asc',
         sortField: 'entity_name',
         pageNumber: 0,
-        pageSize: 5
+        pageSize: 10
       }
     );
   }

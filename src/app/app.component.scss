@@ -2,37 +2,6 @@
   display: block;
 }
 ::ng-deep {
-  .component--app-top-search .mat-form-field-wrapper {
-    padding-bottom: 0px;
-
-    .mat-form-field-infix {
-      border-top: 0;
-      width: auto;
-      min-width: 100px;
-    }
-
-    .mat-form-field-prefix {
-      margin-right: 8px;
-      height: 18px;
-      width: 18px;
-      min-width: 18px;
-      min-height: 18px;
-      line-height: 18px;
-      -webkit-transform: translateY(2px);
-      transform: translateY(2px);
-
-      mat-icon {
-        font-size: 130%;
-        display: inline-block;
-        vertical-align: middle;
-      }
-    }
-
-    .mat-form-field-underline {
-      display: none;
-    }
-  }
-
   app-side-nav {
     app-separator {
       color: rgba(0, 0, 0, 0.5);

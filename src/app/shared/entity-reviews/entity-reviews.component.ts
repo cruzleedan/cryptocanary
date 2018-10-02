@@ -5,6 +5,7 @@ import { Review } from '../../core/models/review.model';
 import { AuthService } from '../../core/services/auth.service';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { MatSelectChange } from '@angular/material';
 
 
 @Component({
@@ -14,6 +15,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class EntityReviewsComponent implements OnInit, OnDestroy {
   baseUrl = environment.baseUrl;
+  filter = {};
   @Input() entityId$;
   @Output() addUserReview: EventEmitter<Review> = new EventEmitter();
   @Output() afterDelete: EventEmitter<any> = new EventEmitter();
@@ -123,5 +125,18 @@ export class EntityReviewsComponent implements OnInit, OnDestroy {
     this.reset();
     this.loadReviews();
     this.afterDelete.emit(event);
+  }
+  sortReviews(event: MatSelectChange) {
+    this.reset();
+    const field = event.value;
+    console.log('Sort Reviews', field);
+
+    this.sortField = field;
+    this.loadReviews('desc', field, this.filter);
+  }
+  sortReviewsDirection() {
+    this.reset();
+    this.sortDirection = this.sortDirection === 'desc' ? 'asc' : 'desc';
+    this.loadReviews(this.sortDirection, this.sortField, this.filter);
   }
 }

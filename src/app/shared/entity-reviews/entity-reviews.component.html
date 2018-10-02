@@ -1,4 +1,28 @@
 <section class="entity-reviews">
+  <div fxLayout="row"
+    fxLayoutAlign="flex-end">
+    <mat-form-field>
+      <mat-select [(value)]="sortField"
+        placeholder="Sort by"
+        (selectionChange)="sortReviews($event)">
+        <mat-option value="createdAt">Date</mat-option>
+        <mat-option value="upvoteTally">Relevance</mat-option>
+        <mat-option value="rating">Shadiness</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button type="button"
+      mat-icon-button
+      aria-label="Sort Direction"
+      (click)="sortReviewsDirection()">
+      <ng-container *ngIf="sortDirection == 'asc'; then sortAsc else sortDesc"></ng-container>
+      <ng-template #sortAsc>
+        <mat-icon>arrow_upward</mat-icon>
+      </ng-template>
+      <ng-template #sortDesc>
+        <mat-icon>arrow_downward</mat-icon>
+      </ng-template>
+    </button>
+  </div>
   <div class="review-item"
     fxLayout="row wrap"
     fxLayoutGap="10px"
@@ -37,7 +61,9 @@
         <span class="rating rating-{{ review | ratingLabel | replaceSpaces }}">{{
           review | ratingLabel }}
         </span>
-        <app-review-action-buttons [review]="review" (afterDelete)="afterReviewDeleted($event)" (afterUpdate)="afterReviewUpdated($event)">
+        <app-review-action-buttons [review]="review"
+          (afterDelete)="afterReviewDeleted($event)"
+          (afterUpdate)="afterReviewUpdated($event)">
         </app-review-action-buttons>
         <span fxFlex></span>
         <span class="review-date">{{ review.createdAt | dateTimeMomentFormat: 'YYYY-MM-DD HH:mm:ss' }}</span>

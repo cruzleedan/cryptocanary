@@ -21,6 +21,9 @@ export class EntityService {
   private searchedEntities = new BehaviorSubject<Entity[]>([]);
   public searchedEntities$ = this.searchedEntities.asObservable();
 
+  private searchedKeyword = new BehaviorSubject<string>('');
+  public searchedKeyword$ = this.searchedKeyword.asObservable();
+
   constructor(
     private apiService: ApiService,
     private alertifyService: AlertifyService,
@@ -81,6 +84,7 @@ export class EntityService {
       );
   }
   approveEntity(entityId: string): Observable<Entity> {
+    this.globalService.setLoadingRequests('approveEntity', true);
     return this.apiService.post(`/entities/${entityId}/approved`, {})
       .pipe(
         map((res) => {
@@ -89,6 +93,9 @@ export class EntityService {
             return of(null);
           }
           return res.data ? res.data : of(false);
+        }),
+        finalize(() => {
+          this.globalService.setLoadingRequests('approveEntity', false);
         })
       );
   }
@@ -107,6 +114,7 @@ export class EntityService {
           console.log('keyword is empty');
           return of([]);
         }
+        this.searchedKeyword.next(keyword);
         return this.findEntities(
           {
             filter: { name: keyword },
@@ -127,8 +135,8 @@ export class EntityService {
     filter: object,
     sortDirection: string,
     sortField: string,
-    pageNumber: number,
-    pageSize: number
+    pageNumber?: number,
+    pageSize?: number
   }): Observable<{ data: Entity[], count: number, pending: number }> {
     const defaults = {
       filter: {},
@@ -248,7 +256,8 @@ export class EntityService {
       })
     );
   }
-  delete(entityId: string): Observable<Object> {
+  deleteEntity(entityId: string): Observable<Object> {
+    this.globalService.setLoadingRequests('deleteEntity', true);
     return this.apiService.delete(`/entities/${entityId}`)
       .pipe(
         map(res => {
@@ -257,9 +266,8 @@ export class EntityService {
           }
           return res.data;
         }),
-        catchError(err => {
-          this.alertifyService.error(this.errorUtil.getError(err) || 'Failed to delete record');
-          return of(null);
+        finalize(() => {
+          this.globalService.setLoadingRequests('deleteEntity', false);
         })
       );
   }

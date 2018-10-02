@@ -81,7 +81,12 @@
 </ng-container>
 
 <ng-container *ngIf="data.type == 'confirm'">
-  <mat-dialog-content>{{ data.msg }}</mat-dialog-content>
+  <mat-dialog-content fxLayout="row">
+    <mat-icon class="warning-icon">error_outline</mat-icon>
+    <section fxLayout="row wrap" fxLayoutAlign="center center">
+      {{ data.msg }}
+    </section>
+  </mat-dialog-content>
   <mat-dialog-actions fxLayout="row"
     fxLayoutAlign="end">
     <button class="mat-raised-button"

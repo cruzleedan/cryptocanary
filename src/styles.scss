@@ -481,3 +481,48 @@ button.grey-text {
     cursor: pointer;
   }
 }
+
+
+.material-icons {
+  direction: ltr;
+  display: inline-block;
+  font-family: 'Material Icons';
+  font-size: 24px;
+  font-style: normal;
+  font-weight: normal;
+  letter-spacing: normal;
+  line-height: 1;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+
+.alertify-notifier .ajs-message {
+  color: #fff;
+  font-weight: 100;
+  letter-spacing: 2px;
+  border: 0;
+  border-radius: 0;
+  text-shadow: none !important;
+}
+.ajs-error {
+  background: rgb(255, 74, 74) !important;
+  &:before {
+    @extend .material-icons;
+    content: "\e001";
+    vertical-align: middle;
+    padding-right: 5px;
+  }
+}
+.ajs-success {
+  background: rgba(28, 140, 54, 0.95) !important;
+  &:before {
+    @extend .material-icons;
+    content: "\e86c";
+    vertical-align: middle;
+    padding-right: 5px;
+  }
+}

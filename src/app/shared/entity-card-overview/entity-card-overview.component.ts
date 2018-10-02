@@ -4,6 +4,7 @@ import { UserService, User } from '../../core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { Entity } from '../../core/models/entity.model';
+import { GlobalService } from '../../core/services/global.service';
 
 @Component({
   selector: 'app-entity-card-overview',
@@ -17,7 +18,8 @@ export class EntityCardOverviewComponent implements OnInit {
   @Input() data: any[];
   constructor(
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private globalService: GlobalService
   ) {
     this.userService.isAuthenticated$.subscribe(isAuthenticated => {
       this.isAuthenticated = isAuthenticated;

@@ -101,7 +101,8 @@
           <mat-icon>forum</mat-icon>
           Activity
         </mat-list-item>
-        <mat-list-item (click)="deleteAccount()"
+        <mat-list-item *ngIf="isCurrentUser"
+          (click)="deleteAccount()"
           routerLinkActive="active">
           <mat-icon>delete_sweep</mat-icon>
           Cancel Account

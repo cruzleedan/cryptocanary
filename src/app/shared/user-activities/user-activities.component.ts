@@ -109,6 +109,11 @@ export class UserActivitiesComponent implements OnInit, OnDestroy {
       };
     });
   }
+  reloadUserActivities() {
+    console.log('reload user activities');
+    this.reset();
+    this.loadUserActivity();
+  }
   afterReviewUpdated(event) {
     this.reset();
     this.loadUserActivity();

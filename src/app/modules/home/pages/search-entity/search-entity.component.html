@@ -2,7 +2,7 @@
   <div fxLayout="row">
     <div class="found-count"
       fxFlex
-      fxLayoutAlign="stretch center">{{ entities.length > 0 ? entities.length : 'No Results' }} Found</div>
+      fxLayoutAlign="stretch center">{{ entitiesCount > 0 ? entitiesCount : 'No Results' }} Found</div>
     <button mat-icon-button
       (click)="toggleFilterPanel()"
       matTooltip="Filter results">
@@ -20,33 +20,55 @@
     </mat-expansion-panel-header>
 
     <section fxLayout="column">
-      <div fxFlex>
+
+      <div>
         <label>Shadiness</label>
-        <mat-slider class="full-width"
-          max="100"
-          color="primary"
-          min="0"
-          step="10"
-          thumbLabel
-          [displayWith]="formatLabel"
-          tickInterval="10">
-        </mat-slider>
+        <div fxLayout="row"
+          fxLayoutAlign="stretch center"
+          fxLayoutGap="10px">
+          <mat-form-field appearance="outline"
+            class="width-100px">
+            <input type="number"
+              matInput
+              [(ngModel)]="ratingModel">
+            <span matSuffix>%</span>
+          </mat-form-field>
+          <mat-slider fxFlex
+            max="100"
+            color="primary"
+            min="0"
+            step="10"
+            thumbLabel
+            [(ngModel)]="ratingModel"
+            [displayWith]="formatLabel"
+            tickInterval="10">
+          </mat-slider>
+        </div>
       </div>
-
-      <div fxLayout="row"
-        fxLayoutGap="20px">
-        <mat-form-field appearance="outline">
-          <input matInput
-            placeholder="Publisher's username">
-          <mat-icon matSuffix>person</mat-icon>
-        </mat-form-field>
-      </div>
+      <form [formGroup]="filterForm">
+        <div>
+          <div fxLayout="row"
+            fxLayoutAlign="stretch center">
+            <mat-icon>person</mat-icon>
+            <label>Publisher's username</label>
+          </div>
+          <div fxLayout="row"
+            fxLayoutAlign="stretch center"
+            fxLayoutGap="10px">
+            <mat-form-field appearance="outline">
+              <input matInput
+                formControlName="publisher">
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
     </section>
-
     <mat-action-row>
       <button mat-button
+        (click)="applyFilters()"
         color="primary">Apply</button>
       <button mat-button
+        (click)="resetFilters()"
         color="primary">Reset</button>
     </mat-action-row>
   </mat-expansion-panel>
@@ -55,4 +77,13 @@
     fxLayout="column"
     fxLayoutGap="10px">
   </app-entity-card-overview>
+  <section fxLayout="row"
+    fxLayoutAlign="center">
+    <mat-paginator #paginator
+      [length]="length"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="pageSizeOptions">
+    </mat-paginator>
+  </section>
 </app-page-layout>

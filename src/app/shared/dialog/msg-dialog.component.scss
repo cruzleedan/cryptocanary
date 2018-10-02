@@ -7,8 +7,10 @@ mat-dialog-content {
   overflow: auto;
   margin: 0px;
   flex: 100%;
+  min-height: 13vh;
   position: relative;
   display: block;
+  padding: 5px;
 
   mat-expansion-panel {
     word-wrap: break-word;
@@ -26,4 +28,12 @@ mat-dialog-content {
   font-size: 12px;
   color: #434343;
   cursor: pointer;
+}
+mat-icon.warning-icon {
+  width: 1em;
+  height: 1em;
+  box-sizing: border-box;
+  font-size: 7em;
+  height: 80px;
+  color: #e4854b;
 }
